@@ -836,9 +836,35 @@
         let contactInfo = {};
         let awaitingInput = false;
         
+        /* 
+        GRADING SYSTEM:
+        
+        Question Mapping:
+        - Q1 (index 0): ABSOLUTE BEGINNER check
+        - Q2-5 (indices 1-4): NOVICE (4 questions)
+        - Q6-10 (indices 5-9): BEGINNER (5 questions, FIRST is index 5)
+        - Q11-17 (indices 10-16): ADVANCED BEGINNER (7 questions, FIRST is index 10)
+        - Q18-22 (indices 17-21): INTERMEDIATE (5 questions, FIRST is index 17)
+        
+        Rules:
+        1. If Q1 wrong → ABSOLUTE BEGINNER (always, but test continues)
+        2. Test stops after 2 total mistakes
+        3. Level is determined by WHERE the SECOND mistake occurred:
+           - Exception: If second mistake is on the FIRST question of a new level (indices 5, 10, or 17),
+             assign the PREVIOUS level instead
+           - Otherwise: assign the level of the question where second mistake occurred
+        
+        Examples:
+        - Wrong: Q2, Q5 → Second mistake at Q5 (NOVICE) → NOVICE
+        - Wrong: Q2, Q6 → Second mistake at Q6 (first BEGINNER) → NOVICE (previous level)
+        - Wrong: Q6, Q10 → Second mistake at Q10 (BEGINNER) → BEGINNER
+        - Wrong: Q6, Q11 → Second mistake at Q11 (first ADV BEGINNER) → BEGINNER (previous level)
+        */
+        
         // Track mistakes by level for grading system
         let gotFirstQuestionWrong = false;
         let totalMistakes = 0;
+        let mistakeQuestionIndices = []; // Track which question indices had mistakes
         let mistakesByLevel = {
             "NOVICE": 0,
             "BEGINNER": 0,
@@ -898,7 +924,10 @@
                     "my brother went home", 
                     "my sister went home",
                     "my little brother went home",
-                    "my little sister went home"
+                    "my little sister went home",
+                    "my little sibling went home",
+                    "my younger sibling went to home",
+                    "my little sibling went to home"
                 ],
                 failLevel: "NOVICE"
             },
@@ -1164,8 +1193,9 @@
                 gotFirstQuestionWrong = true;
             }
             
-            // Increment total mistakes
+            // Increment total mistakes and record question index
             totalMistakes++;
+            mistakeQuestionIndices.push(currentQuestionIndex);
             
             // Track mistake by level
             const level = question.failLevel;
@@ -1196,7 +1226,7 @@
             return totalMistakes >= 2;
         }
 
-        // Normalize answer for comparison
+        // Normalize answer for comparison - lenient with typos
         function normalizeAnswer(answer) {
             let normalized = answer.toLowerCase()
                 .replace(/[?.!,]/g, '')
@@ -1207,10 +1237,74 @@
             normalized = normalized
                 .replace(/\bmom\b/g, 'mother')
                 .replace(/\bmommy\b/g, 'mother')
+                .replace(/\bmamma\b/g, 'mother')
+                .replace(/\bmama\b/g, 'mother')
                 .replace(/\bdad\b/g, 'father')
                 .replace(/\bdaddy\b/g, 'father')
+                .replace(/\bpapa\b/g, 'father')
                 .replace(/\bsis\b/g, 'sister')
                 .replace(/\bbro\b/g, 'brother');
+            
+            // Handle contractions
+            normalized = normalized
+                .replace(/\bim\b/g, 'i am')
+                .replace(/\bi'm\b/g, 'i am')
+                .replace(/\bim\b/g, 'i am')
+                .replace(/\bill\b/g, 'i will')
+                .replace(/\bi'll\b/g, 'i will')
+                .replace(/\bdont\b/g, 'do not')
+                .replace(/\bdon't\b/g, 'do not')
+                .replace(/\bdidnt\b/g, 'did not')
+                .replace(/\bdidn't\b/g, 'did not')
+                .replace(/\bwont\b/g, 'will not')
+                .replace(/\bwon't\b/g, 'will not')
+                .replace(/\bcant\b/g, 'can not')
+                .replace(/\bcan't\b/g, 'can not')
+                .replace(/\bisnt\b/g, 'is not')
+                .replace(/\bisn't\b/g, 'is not')
+                .replace(/\bwasnt\b/g, 'was not')
+                .replace(/\bwasn't\b/g, 'was not')
+                .replace(/\barent\b/g, 'are not')
+                .replace(/\baren't\b/g, 'are not')
+                .replace(/\bwerent\b/g, 'were not')
+                .replace(/\bweren't\b/g, 'were not')
+                .replace(/\btheres\b/g, 'there is')
+                .replace(/\bthere's\b/g, 'there is')
+                .replace(/\btheyre\b/g, 'they are')
+                .replace(/\bthey're\b/g, 'they are')
+                .replace(/\bwere\b/g, 'we are')
+                .replace(/\bwe're\b/g, 'we are')
+                .replace(/\byoure\b/g, 'you are')
+                .replace(/\byou're\b/g, 'you are');
+            
+            // Fix common typos
+            normalized = normalized
+                .replace(/\bteh\b/g, 'the')
+                .replace(/\bwnet\b/g, 'went')
+                .replace(/\bwnt\b/g, 'went')
+                .replace(/\bgona\b/g, 'going to')
+                .replace(/\bgonna\b/g, 'going to')
+                .replace(/\bgunna\b/g, 'going to')
+                .replace(/\bwanna\b/g, 'want to')
+                .replace(/\btomorow\b/g, 'tomorrow')
+                .replace(/\btommorow\b/g, 'tomorrow')
+                .replace(/\btomorrow\b/g, 'tomorrow')
+                .replace(/\byesterady\b/g, 'yesterday')
+                .replace(/\byesturday\b/g, 'yesterday')
+                .replace(/\bfreinds\b/g, 'friends')
+                .replace(/\bfreind\b/g, 'friend')
+                .replace(/\bwoudl\b/g, 'would')
+                .replace(/\bcoudl\b/g, 'could')
+                .replace(/\bshoudl\b/g, 'should')
+                .replace(/\bwat\b/g, 'what')
+                .replace(/\bwhta\b/g, 'what')
+                .replace(/\bwitht\b/g, 'with')
+                .replace(/\bwith\b/g, 'with')
+                .replace(/\bresturant\b/g, 'restaurant')
+                .replace(/\brestaraunt\b/g, 'restaurant')
+                .replace(/\bresturaunt\b/g, 'restaurant')
+                .replace(/\bparking lot\b/g, 'parking lot')
+                .replace(/\bparkinglot\b/g, 'parking lot');
             
             return normalized;
         }
@@ -1229,54 +1323,36 @@
             }
         }
 
-        // Determine level based on mistake patterns
+        // Determine level based on where the second mistake occurred
         function determineLevel() {
             clearTimer();
             
-            // Rule 1: If first question was wrong, always assign ABSOLUTE BEGINNER (overrides all other rules)
+            // Rule 1: If first question was wrong, always assign ABSOLUTE BEGINNER
             if (gotFirstQuestionWrong) {
                 userLevel = "ABSOLUTE BEGINNER";
             } else {
-                // Apply grading rules based on mistake patterns
-                const novice = mistakesByLevel["NOVICE"];
-                const beginner = mistakesByLevel["BEGINNER"];
-                const advBeginner = mistakesByLevel["ADVANCED BEGINNER"];
-                const intermediate = mistakesByLevel["INTERMEDIATE"];
+                // Find the question index of the second mistake
+                const secondMistakeIndex = mistakeQuestionIndices[1]; // 0-indexed array, so [1] is the second mistake
                 
-                // Rule 2: 1 NOVICE + 1 BEGINNER → NOVICE
-                if (novice >= 1 && beginner >= 1) {
+                // First question of each new level:
+                // - BEGINNER starts at index 5 (Q6)
+                // - ADVANCED BEGINNER starts at index 10 (Q11)
+                // - INTERMEDIATE starts at index 17 (Q18)
+                
+                // If second mistake is on the first question of a new level, assign previous level
+                if (secondMistakeIndex === 5) {
+                    // First question of BEGINNER → assign NOVICE
                     userLevel = "NOVICE";
-                }
-                // Rule 3: 2 BEGINNER → BEGINNER
-                else if (beginner >= 2) {
+                } else if (secondMistakeIndex === 10) {
+                    // First question of ADVANCED BEGINNER → assign BEGINNER
                     userLevel = "BEGINNER";
-                }
-                // Rule 4: 1 BEGINNER + 1 ADV BEGINNER → BEGINNER
-                else if (beginner >= 1 && advBeginner >= 1) {
-                    userLevel = "BEGINNER";
-                }
-                // Rule 5: 2 ADV BEGINNER → ADVANCED BEGINNER
-                else if (advBeginner >= 2) {
+                } else if (secondMistakeIndex === 17) {
+                    // First question of INTERMEDIATE → assign ADVANCED BEGINNER
                     userLevel = "ADVANCED BEGINNER";
-                }
-                // Rule 6: 1 ADV BEGINNER + 1 INTERMEDIATE → ADVANCED BEGINNER
-                else if (advBeginner >= 1 && intermediate >= 1) {
-                    userLevel = "ADVANCED BEGINNER";
-                }
-                // Rule 7: 2 INTERMEDIATE → INTERMEDIATE
-                else if (intermediate >= 2) {
-                    userLevel = "INTERMEDIATE";
-                }
-                // Fallback for edge cases (e.g., 2 NOVICE mistakes)
-                else if (novice >= 2) {
-                    userLevel = "NOVICE";
-                }
-                else {
-                    // Default to the lowest level where a mistake occurred
-                    if (novice > 0) userLevel = "NOVICE";
-                    else if (beginner > 0) userLevel = "BEGINNER";
-                    else if (advBeginner > 0) userLevel = "ADVANCED BEGINNER";
-                    else if (intermediate > 0) userLevel = "INTERMEDIATE";
+                } else {
+                    // Otherwise, assign the level of the question where second mistake occurred
+                    const question = questions[secondMistakeIndex];
+                    userLevel = question.failLevel;
                 }
             }
             
@@ -1305,13 +1381,17 @@
 
         // Explain mistake
         function explainMistake() {
-            const question = questions[currentQuestionIndex];
+            // Show the mistake that determined their level (the second mistake)
+            const relevantMistakeIndex = mistakeQuestionIndices[1] !== undefined ? mistakeQuestionIndices[1] : currentQuestionIndex;
+            const question = questions[relevantMistakeIndex];
             let explanation = '';
             
             if (question.type === 'yesno') {
                 explanation = `The question "${question.question}" requires knowledge of Korean reading or comprehension at this level.`;
             } else {
-                explanation = `The correct answer was: "${question.correctAnswers[0]}". You answered: "${wrongAnswer}"`;
+                const userAnswer = responseSheet.responses.find(r => r.questionNumber === (relevantMistakeIndex + 1));
+                const wrongAnswerText = userAnswer ? userAnswer.userAnswer : wrongAnswer;
+                explanation = `The correct answer was: "${question.correctAnswers[0]}". You answered: "${wrongAnswerText}"`;
             }
             
             addMessage(explanation, 'assistant');
@@ -1579,8 +1659,9 @@
                             gotFirstQuestionWrong = true;
                         }
                         
-                        // Increment total mistakes
+                        // Increment total mistakes and record question index
                         totalMistakes++;
+                        mistakeQuestionIndices.push(currentQuestionIndex);
                         
                         // Track mistake by level
                         const level = question.failLevel;
