@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>KoreanLearnin</title>
+    <script type="text/javascript"> (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", "tt08azyz1t"); </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        /* --- Fix A: stop top-margin collapse on the very first child --- */
+        html, body {
+            margin: 0; 
+            padding: 0;
+            height: auto;
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        body {
+          padding-top: 1px;
+        }
+        body > *:first-child,
+        main > *:first-child,
+        .container > *:first-child {
+          margin-top: 0 !important;
+        }
+
+        /* --- Fix B: disable scroll-snap --- */
+        html, body, main, .page, .container {
+          scroll-snap-type: none !important;
+        }
+
+        /* --- Fix C: keep layout stable while images load --- */
+        img { height: auto; max-width: 100%; }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: url('https://cdn.shopify.com/s/files/1/0674/6747/7282/files/sky.png?v=1750990355') repeat;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: calc(2rem + env(safe-area-inset-top)) 2rem 2rem 2rem;
+            background: url('https://cdn.shopify.com/s/files/1/0674/6747/7282/files/sky.png?v=1750990355') repeat;
+            backdrop-filter: blur(10px);
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+            transition: padding 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
+            overflow: visible;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .step {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .step.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .step.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(1.5rem, 6vw, 3rem);
+            margin-bottom: 2rem;
+            color: white;
+            text-shadow: -2px -2px 0 #31afed, 2px -2px 0 #31afed, -2px 2px 0 #31afed, 2px 2px 0 #31afed;
+            line-height: 1.4;
+        }
+        
+        .description {
+            font-size: clamp(0.8rem, 3vw, 1.1rem);
+            margin: 0 auto 2rem auto;
+            opacity: 0.9;
+            max-width: 700px;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        button {
+            padding: clamp(12px, 3vw, 18px) clamp(24px, 5vw, 40px);
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 140px;
+            margin: 0.5rem;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        button.primary { 
+            background: linear-gradient(45deg, #e74c3c, #c0392b); 
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3); 
+        }
+        
+        button.secondary { 
+            background: linear-gradient(45deg, #9b59b6, #8e44ad); 
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3); 
+        }
+        
+        button.class-button { 
+            background: linear-gradient(45deg, #3498db, #2980b9); 
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); 
+        }
+        
+        button:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); 
+        }
+        
+        button:active { 
+            transform: translateY(0); 
+        }
+        
+        .hero-image {
+            margin-top: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            width: clamp(300px, 60vw, 550px);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(100vh);
+            transition: transform 0.8s ease-out;
+        }
+        
+        .hero-image.slide-up img {
+            transform: translateY(0);
+        }
+        
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .popup-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .popup-content {
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(231, 76, 60, 0.8);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+            padding: 0;
+            min-width: unset;
+            margin: 0;
+        }
+        
+        .popup-close:hover {
+            background: rgba(192, 57, 43, 1);
+            transform: rotate(90deg);
+        }
+        
+        .popup-content h2 {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            margin-bottom: 1.5rem;
+            color: #FFD700;
+            text-shadow: -2px -2px 0 #8B4513, 2px -2px 0 #8B4513, -2px 2px 0 #8B4513, 2px 2px 0 #8B4513;
+        }
+        
+        .popup-content p {
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            line-height: 1.8;
+            margin-bottom: 0.8rem;
+            color: #FFFFFF;
+        }
+        
+        .popup-content p strong {
+            color: #90EE90;
+            text-shadow: -1px -1px 0 #2F4F2F, 1px -1px 0 #2F4F2F, -1px 1px 0 #2F4F2F, 1px 1px 0 #2F4F2F;
+        }
+        
+        .popup-time {
+            color: #31afed;
+            text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
+        }
+
+        .class-container {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem auto;
+            max-width: 800px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .price {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: bold;
+            color: #FF1493;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            border: none;
+            text-shadow: -2px -2px 0 #000000, 2px -2px 0 #000000, -2px 2px 0 #000000, 2px 2px 0 #000000;
+            margin-top: auto;
+        }
+
+        .price-breakdown-link {
+            font-size: clamp(0.6rem, 1.8vw, 0.75rem);
+            color: #31afed;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .price-breakdown-link:hover {
+            color: #5bc0de;
+        }
+
+        .pricing-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 2rem auto;
+            max-width: 1400px;
+            padding: 0 1rem;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .pricing-card h3 {
+            font-size: clamp(0.9rem, 2.2vw, 1.15rem);
+            color: #ffd700;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: -2px -2px 0 #000000, 2px -2px 0 #000000, -2px 2px 0 #000000, 2px 2px 0 #000000;
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+            flex-grow: 1;
+        }
+        
+        .pricing-card ul li {
+            font-size: clamp(0.55rem, 1.5vw, 0.75rem);
+            line-height: 1.6;
+            margin-bottom: 0.8rem;
+            padding-left: 1.2rem;
+            position: relative;
+            opacity: 0.9;
+        }
+        
+        .pricing-card ul li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #31afed;
+            font-weight: bold;
+        }
+
+        .pricing-card .price {
+            line-height: 1.85;
+        }
+
+        /* Chat Interface Styles */
+        .chat-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-messages {
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 10px;
+            animation: messageSlideIn 0.5s ease-out;
+            line-height: 1.6;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.assistant {
+            background: rgba(49, 175, 237, 0.2);
+            border-left: 4px solid #31afed;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+        }
+
+        .chat-message.user {
+            background: rgba(155, 89, 182, 0.2);
+            border-left: 4px solid #9b59b6;
+            margin-left: 2rem;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+        }
+
+        .chat-message.system {
+            background: rgba(255, 215, 0, 0.2);
+            border-left: 4px solid #ffd700;
+            text-align: center;
+            font-weight: bold;
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+        }
+
+        .chat-message.error {
+            background: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid #e74c3c;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+        }
+
+        .chat-message.success {
+            background: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid #2ecc71;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 1rem;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-family: 'Press Start 2P', cursive;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #31afed;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .chat-submit {
+            padding: 1rem 2rem;
+            min-width: 120px;
+        }
+
+        .timer-display {
+            text-align: center;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            color: #ffd700;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-weight: bold;
+            min-height: 2rem;
+        }
+
+        .timer-warning {
+            color: #ff6b6b;
+            animation: pulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .chat-button {
+            padding: 0.8rem 1.5rem;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            min-width: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                padding: 1rem;
+            }
+
+            .chat-messages {
+                min-height: 300px;
+                max-height: 400px;
+            }
+
+            .chat-message.user {
+                margin-left: 1rem;
+            }
+
+            .chat-input-container {
+                flex-direction: column;
+            }
+
+            .chat-submit {
+                width: 100%;
+            }
+        }
+
+        /* Blackboard Widget Styles */
+        .blackboard-widget {
+            max-width: 1035px;
+            margin: 30px auto;
+            padding: 20px 30px;
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border: 15px solid #8B4513;
+            border-radius: 10px;
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,0.8),
+                0 5px 15px rgba(0,0,0,0.5);
+            font-family: 'Press Start 2P', cursive;
+            min-height: 150px;
+        }
+
+        .bb-header {
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(255,255,255,0.3);
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .bb-underline {
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.6) 20%, 
+                rgba(255,255,255,0.8) 50%, 
+                rgba(255,255,255,0.6) 80%, 
+                transparent 100%);
+            margin: 10px auto 15px;
+            width: 80%;
+        }
+
+        .class-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px 15px;
+        }
+
+        .class-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            gap: 12px;
+        }
+
+        .class-name {
+            color: #87CEEB;
+            font-size: clamp(0.5rem, 1.5vw, 0.7rem);
+            text-shadow: 1px 1px 3px rgba(135,206,235,0.4);
+            line-height: 1.3;
+            flex-shrink: 0;
+        }
+
+        .seats-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .seats-count {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: bold;
+        }
+
+        .seats-label {
+            color: #ffd700;
+            font-size: clamp(0.45rem, 1.2vw, 0.6rem);
+            text-transform: uppercase;
+        }
+
+        /* Green for 4+ seats */
+        .seats-high { 
+            color: #00ff00;
+            text-shadow: 0 0 20px rgba(0,255,0,0.5);
+        }
+        
+        /* Yellow blinking for 2-3 seats */
+        .seats-medium { 
+            color: #ffff00;
+            text-shadow: 0 0 20px rgba(255,255,0,0.5);
+            animation: blink 1.2s ease-in-out infinite;
+        }
+        
+        /* Red FAST blinking for 1 seat */
+        .seats-urgent { 
+            color: #ff4444;
+            text-shadow: 0 0 30px rgba(255,68,68,0.8);
+            animation: urgent-blink 0.5s ease-in-out infinite;
+        }
+        
+        /* Solid red for sold out */
+        .seats-out { 
+            color: #ff4444;
+            text-shadow: 0 0 30px rgba(255,68,68,0.8);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes urgent-blink {
+            0%, 100% { 
+                opacity: 1; 
+                transform: scale(1.1);
+                text-shadow: 0 0 40px rgba(255,68,68,1);
+            }
+            50% { 
+                opacity: 0.2;
+                transform: scale(1);
+                text-shadow: 0 0 20px rgba(255,68,68,0.5);
+            }
+        }
+
+        .loading {
+            color: #fff;
+            text-align: center;
+            padding: 30px;
+            font-size: clamp(0.6rem, 1.8vw, 0.85rem);
+        }
+
+        .status-text {
+            font-size: clamp(0.4rem, 1.1vw, 0.55rem);
+            color: rgba(255,255,255,0.5);
+            margin-left: 5px;
+            font-style: normal;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-image img {
+                width: clamp(320px, 95vw, 600px);
+            }
+            
+            .popup-content {
+                padding: 1.5rem;
+            }
+
+            .pricing-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0 0.5rem;
+            }
+            
+            .pricing-card {
+                padding: 1.2rem;
+            }
+            
+            .pricing-card ul li {
+                font-size: 0.7rem;
+            }
+            
+            #tutoringPricingPage .pricing-container {
+                grid-template-columns: 1fr !important;
+            }
+
+            .blackboard-widget {
+                max-width: 95%;
+                padding: 15px 20px;
+                margin: 20px auto;
+                min-height: 120px;
+            }
+
+            .class-list {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .bb-header {
+                font-size: clamp(0.7rem, 2vw, 0.9rem);
+            }
+
+            .class-name {
+                font-size: clamp(0.45rem, 1.3vw, 0.6rem);
+            }
+
+            .seats-count {
+                font-size: clamp(1rem, 3vw, 1.4rem);
+            }
+
+            .seats-label {
+                font-size: clamp(0.4rem, 1vw, 0.5rem);
+            }
+
+            .status-text {
+                font-size: clamp(0.4rem, 1vw, 0.5rem);
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .pricing-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .class-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media screen and (max-width: 435px) {
+            button {
+                transform: scale(0.9);
+                transform-origin: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="levelTesterPage" class="step active">
+            <h1>🎮 Level Tester</h1>
+            <div class="chat-container">
+                <div id="chatMessages" class="chat-messages"></div>
+                <div class="chat-input-container">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Type your answer...">
+                    <button onclick="submitAnswer()" class="chat-submit">Send</button>
+                </div>
+                <div id="timerDisplay" class="timer-display"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        // SERVER CONFIGURATION - Update this with your endpoint
+        const SERVER_CONFIG = {
+            endpoint: 'https://script.google.com/macros/s/AKfycbw-9J2_wqepEk9rLHYHIVPqilh5_Mcb7ETSpswNrRrVGkIwqkQEHv9ENS8CcGhXPsrdVg/exec',  // Change this to your actual endpoint
+            enabled: true  // Set to false to disable server submission
+        };
+        
+        // Level Tester State
+        let currentState = 'getName';
+        let userName = '';
+        let currentQuestionIndex = 0;
+        let mistakeCount = 0;
+        let timerInterval = null;
+        let timeLeft = 20;
+        let userLevel = '';
+        let wrongAnswer = '';
+        let contactInfo = {};
+        let awaitingInput = false;
+        
+        // Response tracking
+        let testStartTime = null;
+        let testEndTime = null;
+        let responseSheet = {
+            userName: '',
+            level: '',
+            testDate: new Date().toISOString(),
+            responses: [],
+            contactInfo: {},
+            totalQuestions: 0,
+            correctAnswers: 0,
+            incorrectAnswers: 0,
+            timeouts: 0
+        };
+
+        // Questions with correct answers and level assignments
+        const questions = [
+            {
+                question: "Can you read this?: 제 어머니는 공원에 갔어요 (You do not need to know what it means)",
+                type: "yesno",
+                correctAnswer: "yes",
+                failLevel: "ABSOLUTE BEGINNER"
+            },
+            {
+                question: "What does this mean in English?\n오늘 뭐 했어요?",
+                type: "translation",
+                correctAnswers: ["what did you do today", "what did you do today?", "what have you done today"],
+                failLevel: "NOVICE"
+            },
+            {
+                question: "Provide the English Translation: \"제 엄마는 의사였어요\"",
+                type: "translation",
+                correctAnswers: ["my mom was a doctor", "my mother was a doctor", "my mom was doctor", "my mother was doctor"],
+                failLevel: "NOVICE"
+            },
+            {
+                question: "Provide the English Translation: \"제 아버지는 주차장에 있어요\"",
+                type: "translation",
+                correctAnswers: ["my father is at the parking lot", "my dad is at the parking lot", "my father is in the parking lot", "my dad is in the parking lot", "my father is at a parking lot", "my dad is at a parking lot"],
+                failLevel: "NOVICE"
+            },
+            {
+                question: "Provide the English Translation: 제 동생은 집에 갔어요.",
+                type: "translation",
+                correctAnswers: [
+                    "my younger sibling went home", 
+                    "my sibling went home", 
+                    "my younger brother went home", 
+                    "my younger sister went home", 
+                    "my brother went home", 
+                    "my sister went home",
+                    "my little brother went home",
+                    "my little sister went home"
+                ],
+                failLevel: "NOVICE"
+            },
+            {
+                question: "Provide the English Translation: \"제 엄마는 친구랑 만나고 아빠는 식당에 있어요\"",
+                type: "translation",
+                correctAnswers: [
+                    "my mom is meeting with a friend and my dad is at a restaurant", 
+                    "my mother is meeting with a friend and my father is at a restaurant", 
+                    "my mom meets with a friend and my dad is at a restaurant",
+                    "my mom is meeting a friend and my dad is at a restaurant",
+                    "my mother is meeting a friend and my father is at a restaurant"
+                ],
+                failLevel: "BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"제 엄마하고 집에 갔어요\"",
+                type: "translation",
+                correctAnswers: ["i went home with my mom", "i went home with my mother"],
+                failLevel: "BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"제 아빠는 낚시하는 걸 좋아해요\"",
+                type: "translation",
+                correctAnswers: ["my dad likes fishing", "my father likes fishing", "my dad likes to fish", "my father likes to fish"],
+                failLevel: "BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"제 엄마는 집에 가는 거 같아요\"",
+                type: "translation",
+                correctAnswers: [
+                    "i think my mom is going home", 
+                    "i think my mother is going home", 
+                    "it seems like my mom is going home", 
+                    "it seems like my mother is going home",
+                    "it seems my mom is going home",
+                    "it seems my mother is going home"
+                ],
+                failLevel: "BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"학교에서 밥 먹고 친구들하고 얘기하려고 해요\"",
+                type: "translation",
+                correctAnswers: [
+                    "i'm going to eat at school and talk with friends", 
+                    "i will eat at school and talk with friends", 
+                    "i'm trying to eat at school and talk with friends",
+                    "i'm going to eat at school and talk with my friends",
+                    "i will eat at school and talk with my friends",
+                    "i'm going to eat food at school and talk with friends"
+                ],
+                failLevel: "BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"저는 내일 영화를 볼 거예요.\"",
+                type: "translation",
+                correctAnswers: ["i will watch a movie tomorrow", "i'm going to watch a movie tomorrow", "i will watch the movie tomorrow", "i'm going to watch the movie tomorrow", "i will watch movie tomorrow"],
+                failLevel: "ADVANCED BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"저는 나중에 공부할 거예요.\"",
+                type: "translation",
+                correctAnswers: ["i will study later", "i'm going to study later", "i'll study later"],
+                failLevel: "ADVANCED BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"저는 어제 친구를 만났어요.\"",
+                type: "translation",
+                correctAnswers: ["i met a friend yesterday", "i met my friend yesterday", "i met friend yesterday"],
+                failLevel: "ADVANCED BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"먹을 데가 있나요?\"",
+                type: "translation",
+                correctAnswers: ["is there a place to eat", "is there somewhere to eat", "is there a place to eat at", "is there anywhere to eat"],
+                failLevel: "ADVANCED BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"먹을게 많아요\"",
+                type: "translation",
+                correctAnswers: ["there is a lot to eat", "there are many things to eat", "there is much to eat", "there's a lot to eat", "there are a lot of things to eat"],
+                failLevel: "ADVANCED BEGINNER"
+            },
+            {
+                question: "What does this mean in English: \"제가 집에 갈 때, 친구를 만났어요.\"",
+                type: "translation",
+                correctAnswers: [
+                    "when i was going home, i met a friend", 
+                    "when i was going home i met a friend", 
+                    "i met a friend when i was going home",
+                    "when i was going home, i met my friend",
+                    "when i was going home i met my friend",
+                    "i met my friend when i was going home"
+                ],
+                failLevel: "ADVANCED BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"내일 비가 오면 집에 있을 거예요.\"",
+                type: "translation",
+                correctAnswers: [
+                    "if it rains tomorrow, i will stay home", 
+                    "if it rains tomorrow i will stay home", 
+                    "if it rains tomorrow, i will be at home",
+                    "if it rains tomorrow i will be at home",
+                    "if it rains tomorrow, i'll stay home",
+                    "if it rains tomorrow i'll be at home"
+                ],
+                failLevel: "ADVANCED BEGINNER"
+            },
+            {
+                question: "Provide the English Translation: \"제가 올해 친구들이랑 한국에 갈 건데, 시간이 없어서 모르겠어요.\"",
+                type: "translation",
+                correctAnswers: [
+                    "i'm going to go to korea with friends this year, but i don't have time so i don't know", 
+                    "i was going to go to korea with friends this year, but i don't have time so i'm not sure",
+                    "i'm going to go to korea with my friends this year, but i don't have time so i don't know",
+                    "i'm going to korea with friends this year, but i don't have time so i don't know",
+                    "i'm going to go to korea with friends this year but i don't have time so i don't know"
+                ],
+                failLevel: "INTERMEDIATE"
+            },
+            {
+                question: "What does this mean in English: \"한 달 동안 한국에 있을 거예요\"",
+                type: "translation",
+                correctAnswers: [
+                    "i will be in korea for a month", 
+                    "i will be in korea for one month",
+                    "i'll be in korea for a month",
+                    "i'll be in korea for one month"
+                ],
+                failLevel: "INTERMEDIATE"
+            },
+            {
+                question: "Provide the English Translation: \"한국에 가고 싶은데 요즘에 날씨가 너무 추워서 못 갈거 같아요.\"",
+                type: "translation",
+                correctAnswers: [
+                    "i want to go to korea but the weather is too cold these days so i don't think i can go", 
+                    "i want to go to korea but these days the weather is too cold so i think i can't go",
+                    "i want to go to korea but the weather is too cold lately so i don't think i can go",
+                    "i want to go to korea but lately the weather is too cold so i don't think i can go"
+                ],
+                failLevel: "INTERMEDIATE"
+            },
+            {
+                question: "Provide the English Translation: \"숙제를 해야 돼서 전화를 끊었어요\"",
+                type: "translation",
+                correctAnswers: [
+                    "i hung up the phone because i had to do homework", 
+                    "i hung up because i had to do homework",
+                    "i hung up the phone because i had to do my homework",
+                    "i hung up because i had to do my homework"
+                ],
+                failLevel: "INTERMEDIATE"
+            },
+            {
+                question: "Provide the English Translation: \"의사한테 검진을 받아야 되면 빨리 가야 돼요\"",
+                type: "translation",
+                correctAnswers: [
+                    "if you need to get a checkup from the doctor, you have to go quickly", 
+                    "if you have to get a checkup from the doctor, you should go quickly",
+                    "if you need to get a checkup from the doctor you have to go quickly",
+                    "if you need to get a checkup from a doctor, you have to go quickly",
+                    "if you have to get a checkup from a doctor, you should go quickly"
+                ],
+                failLevel: "INTERMEDIATE"
+            }
+        ];
+
+        // Initialize chat
+        function initChat() {
+            addMessage("Welcome my 친구! Let's determine your level!", 'assistant');
+            setTimeout(() => {
+                addMessage("First, what's your full name?", 'assistant');
+                awaitingInput = true;
+                focusInput();
+            }, 1000);
+        }
+
+        // Add message to chat
+        function addMessage(text, type = 'assistant') {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}`;
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Focus on input
+        function focusInput() {
+            document.getElementById('chatInput').focus();
+        }
+
+        // Start timer
+        function startTimer() {
+            timeLeft = 20;
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 5) {
+                    document.getElementById('timerDisplay').classList.add('timer-warning');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        // Update timer display
+        function updateTimerDisplay() {
+            const display = document.getElementById('timerDisplay');
+            if (timeLeft > 0) {
+                display.textContent = `⏱️ Time left: ${timeLeft}s`;
+            } else {
+                display.textContent = '';
+            }
+        }
+
+        // Clear timer
+        function clearTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            document.getElementById('timerDisplay').textContent = '';
+            document.getElementById('timerDisplay').classList.remove('timer-warning');
+        }
+
+        // Handle timeout
+        function handleTimeout() {
+            mistakeCount++;
+            responseSheet.timeouts++;
+            
+            // Record the timeout response
+            const question = questions[currentQuestionIndex];
+            responseSheet.responses.push({
+                questionNumber: currentQuestionIndex + 1,
+                question: question.question,
+                userAnswer: '[TIMEOUT]',
+                correctAnswer: question.correctAnswers ? question.correctAnswers[0] : 'N/A',
+                isCorrect: false,
+                timeElapsed: 20,
+                timestamp: new Date().toISOString()
+            });
+            
+            addMessage("⏰ Time's up!", 'error');
+            
+            if (mistakeCount >= 2) {
+                addMessage("⚠️ That's your second mistake. Your level will be determined now.", 'error');
+                setTimeout(() => {
+                    determineLevel();
+                }, 1500);
+            } else {
+                addMessage("⚠️ That's your first mistake. One more mistake and your level will be determined.", 'error');
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questions.length) {
+                        askNextQuestion();
+                    } else {
+                        completeTest();
+                    }
+                }, 2000);
+            }
+        }
+
+        // Normalize answer for comparison
+        function normalizeAnswer(answer) {
+            let normalized = answer.toLowerCase()
+                .replace(/[?.!,]/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+            
+            // Handle common synonyms
+            normalized = normalized
+                .replace(/\bmom\b/g, 'mother')
+                .replace(/\bmommy\b/g, 'mother')
+                .replace(/\bdad\b/g, 'father')
+                .replace(/\bdaddy\b/g, 'father')
+                .replace(/\bsis\b/g, 'sister')
+                .replace(/\bbro\b/g, 'brother');
+            
+            return normalized;
+        }
+
+        // Check answer
+        function checkAnswer(userAnswer) {
+            const question = questions[currentQuestionIndex];
+            const normalized = normalizeAnswer(userAnswer);
+            
+            if (question.type === 'yesno') {
+                return normalized === 'yes' || normalized === 'y';
+            } else {
+                return question.correctAnswers.some(answer => 
+                    normalizeAnswer(answer) === normalized
+                );
+            }
+        }
+
+        // Determine level
+        function determineLevel() {
+            clearTimer();
+            const question = questions[currentQuestionIndex];
+            userLevel = question.failLevel;
+            
+            addMessage(`🎯 YOU ARE A ${userLevel}`, 'system');
+            setTimeout(() => {
+                addMessage("Congrats!", 'success');
+                setTimeout(() => {
+                    explainMistake();
+                }, 1000);
+            }, 1000);
+        }
+
+        // Explain mistake and ask to continue
+        function explainMistake() {
+            const question = questions[currentQuestionIndex];
+            let explanation = '';
+            
+            if (question.type === 'yesno') {
+                explanation = `The question "${question.question}" requires knowledge of Korean reading or comprehension at this level.`;
+            } else {
+                explanation = `The correct answer was: "${question.correctAnswers[0]}". You answered: "${wrongAnswer}"`;
+            }
+            
+            addMessage(explanation, 'assistant');
+            
+            setTimeout(() => {
+                addMessage("Would you like to continue and see what we can do for you? (yes/no)", 'assistant');
+                currentState = 'askContinue';
+                awaitingInput = true;
+                focusInput();
+            }, 1500);
+        }
+
+        // Complete test (passed all questions)
+        function completeTest() {
+            clearTimer();
+            userLevel = "ADVANCED";
+            addMessage(`🎯 YOU ARE ADVANCED`, 'system');
+            setTimeout(() => {
+                addMessage("Congrats! You've passed all questions!", 'success');
+                setTimeout(() => {
+                    askContinue();
+                }, 1000);
+            }, 1000);
+        }
+
+        // Ask if they want to continue
+        function askContinue() {
+            addMessage("Would you like to continue and see what we can do for you? (yes/no)", 'assistant');
+            currentState = 'askContinue';
+            awaitingInput = true;
+            focusInput();
+        }
+
+        // Ask about plan preference
+        function askPlanPreference() {
+            addMessage("What kind of plan would you prefer?", 'assistant');
+            
+            setTimeout(() => {
+                const container = document.createElement('div');
+                container.className = 'chat-message assistant';
+                container.innerHTML = `
+                    <div class="chat-button-group">
+                        <button class="button primary chat-button" onclick="selectPlan('free')">A free app</button>
+                        <button class="button class-button chat-button" onclick="selectPlan('real')">Real instruction and structured classes</button>
+                    </div>
+                `;
+                document.getElementById('chatMessages').appendChild(container);
+                document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+                awaitingInput = false;
+            }, 1000);
+        }
+
+        // Select plan
+        function selectPlan(type) {
+            if (type === 'free') {
+                addMessage("A free app", 'user');
+                setTimeout(() => {
+                    testEndTime = new Date();
+                    responseSheet.level = userLevel;
+                    
+                    addMessage("Great! We have several free resources available. Would you like a copy of your test results?", 'assistant');
+                    setTimeout(() => {
+                        generateResponseSheet();
+                    }, 1000);
+                }, 500);
+            } else {
+                addMessage("Real instruction and structured classes", 'user');
+                setTimeout(() => {
+                    addMessage("Great choice! We can create a personalized action plan for you.", 'assistant');
+                    setTimeout(() => {
+                        askPhoneNumber();
+                    }, 1500);
+                }, 500);
+            }
+        }
+
+        // Collect contact info
+        function askPhoneNumber() {
+            addMessage("What's your phone number so Mr. Calvin can discuss your personalized improvement plan?", 'assistant');
+            currentState = 'getPhone';
+            awaitingInput = true;
+            focusInput();
+        }
+
+        function askBestTime() {
+            addMessage("What time is best to call you?", 'assistant');
+            currentState = 'getTime';
+            awaitingInput = true;
+            focusInput();
+        }
+
+        function askTimezone() {
+            addMessage("What's your time zone or state?", 'assistant');
+            currentState = 'getTimezone';
+            awaitingInput = true;
+            focusInput();
+        }
+
+        function askEmail() {
+            addMessage("Finally, what's your email address?", 'assistant');
+            currentState = 'getEmail';
+            awaitingInput = true;
+            focusInput();
+        }
+
+        function finishConversation() {
+            testEndTime = new Date();
+            responseSheet.contactInfo = contactInfo;
+            
+            addMessage("Perfect! Mr. Calvin will reach out to you soon to discuss your personalized plan. Thank you! 🎉", 'success');
+            
+            setTimeout(() => {
+                generateResponseSheet();
+            }, 1500);
+            
+            awaitingInput = false;
+            document.getElementById('chatInput').disabled = true;
+            document.querySelector('.chat-submit').disabled = true;
+        }
+        
+        // Generate and display response sheet
+        function generateResponseSheet() {
+            responseSheet.userName = userName;
+            responseSheet.level = userLevel;
+            responseSheet.totalQuestions = responseSheet.responses.length;
+            responseSheet.correctAnswers = responseSheet.responses.filter(r => r.isCorrect).length;
+            responseSheet.incorrectAnswers = responseSheet.totalQuestions - responseSheet.correctAnswers;
+            
+            const duration = testEndTime ? Math.round((testEndTime - testStartTime) / 1000) : 0;
+            responseSheet.testDuration = duration;
+            
+            // Log to console for easy access
+            console.log('=== KOREAN LEVEL TEST RESPONSE SHEET ===');
+            console.log(JSON.stringify(responseSheet, null, 2));
+            console.log('=== END RESPONSE SHEET ===');
+            
+            // Send to server
+            sendResponseToServer();
+            
+            addMessage("📋 Here's your complete response sheet:", 'system');
+            
+            setTimeout(() => {
+                const container = document.createElement('div');
+                container.className = 'chat-message assistant';
+                container.innerHTML = `
+                    <div style="text-align: left; line-height: 1.8;">
+                        <strong>📊 Test Summary</strong><br>
+                        Name: ${responseSheet.userName}<br>
+                        Level: ${responseSheet.level}<br>
+                        Date: ${new Date(responseSheet.testDate).toLocaleString()}<br>
+                        Duration: ${duration} seconds<br>
+                        Questions Answered: ${responseSheet.totalQuestions}<br>
+                        ✅ Correct: ${responseSheet.correctAnswers}<br>
+                        ❌ Incorrect: ${responseSheet.incorrectAnswers}<br>
+                        ⏰ Timeouts: ${responseSheet.timeouts}<br>
+                        <br>
+                        <strong>📞 Contact Information</strong><br>
+                        Phone: ${contactInfo.phone || 'N/A'}<br>
+                        Best Time: ${contactInfo.time || 'N/A'}<br>
+                        Timezone: ${contactInfo.timezone || 'N/A'}<br>
+                        Email: ${contactInfo.email || 'N/A'}
+                    </div>
+                `;
+                document.getElementById('chatMessages').appendChild(container);
+                document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+                
+                setTimeout(() => {
+                    addDownloadButtons();
+                }, 500);
+            }, 500);
+        }
+        
+        // Send response sheet to server
+        async function sendResponseToServer() {
+            if (!SERVER_CONFIG.enabled) {
+                console.log('Server submission disabled');
+                return;
+            }
+            
+            try {
+                console.log('Sending response sheet to server...');
+                
+                const response = await fetch(SERVER_CONFIG.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(responseSheet)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Response sheet successfully sent to server:', result);
+                
+                // Optionally show success message to user
+                // addMessage("✅ Your results have been saved!", 'success');
+                
+            } catch (error) {
+                console.error('❌ Error sending response sheet to server:', error);
+                console.log('Response sheet saved locally. Data:', responseSheet);
+                
+                // Optionally show error message to user
+                // addMessage("⚠️ Unable to save to server, but your results are available to download.", 'error');
+            }
+        }
+        
+        // Add download/copy buttons
+        function addDownloadButtons() {
+            const container = document.createElement('div');
+            container.className = 'chat-message assistant';
+            container.innerHTML = `
+                <div class="chat-button-group">
+                    <button class="button primary chat-button" onclick="copyResponseSheet()">📋 Copy to Clipboard</button>
+                    <button class="button secondary chat-button" onclick="downloadResponseSheet()">💾 Download as Text</button>
+                    <button class="button class-button chat-button" onclick="viewDetailedSheet()">📝 View Detailed Answers</button>
+                </div>
+            `;
+            document.getElementById('chatMessages').appendChild(container);
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+        
+        // Generate text version of response sheet
+        function generateResponseText() {
+            const duration = testEndTime ? Math.round((testEndTime - testStartTime) / 1000) : 0;
+            
+            let text = `KOREAN LEVEL TEST - RESPONSE SHEET\n`;
+            text += `${'='.repeat(50)}\n\n`;
+            text += `STUDENT INFORMATION\n`;
+            text += `Name: ${responseSheet.userName}\n`;
+            text += `Level: ${responseSheet.level}\n`;
+            text += `Test Date: ${new Date(responseSheet.testDate).toLocaleString()}\n`;
+            text += `Test Duration: ${duration} seconds\n\n`;
+            
+            text += `TEST RESULTS\n`;
+            text += `Questions Answered: ${responseSheet.totalQuestions}\n`;
+            text += `Correct Answers: ${responseSheet.correctAnswers}\n`;
+            text += `Incorrect Answers: ${responseSheet.incorrectAnswers}\n`;
+            text += `Timeouts: ${responseSheet.timeouts}\n\n`;
+            
+            text += `CONTACT INFORMATION\n`;
+            text += `Phone: ${contactInfo.phone || 'N/A'}\n`;
+            text += `Best Time to Call: ${contactInfo.time || 'N/A'}\n`;
+            text += `Timezone/State: ${contactInfo.timezone || 'N/A'}\n`;
+            text += `Email: ${contactInfo.email || 'N/A'}\n\n`;
+            
+            text += `DETAILED RESPONSES\n`;
+            text += `${'='.repeat(50)}\n\n`;
+            
+            responseSheet.responses.forEach((response, index) => {
+                text += `Question ${response.questionNumber}:\n`;
+                text += `${response.question}\n`;
+                text += `User Answer: ${response.userAnswer}\n`;
+                text += `Correct Answer: ${response.correctAnswer}\n`;
+                text += `Result: ${response.isCorrect ? '✓ CORRECT' : '✗ INCORRECT'}\n`;
+                text += `Time Taken: ${response.timeElapsed}s\n`;
+                text += `\n`;
+            });
+            
+            return text;
+        }
+        
+        // Copy to clipboard
+        function copyResponseSheet() {
+            const text = generateResponseText();
+            navigator.clipboard.writeText(text).then(() => {
+                addMessage("✅ Response sheet copied to clipboard!", 'success');
+            }).catch(() => {
+                addMessage("❌ Failed to copy. Please try downloading instead.", 'error');
+            });
+        }
+        
+        // Download as text file
+        function downloadResponseSheet() {
+            const text = generateResponseText();
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `korean_level_test_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            addMessage("✅ Response sheet downloaded!", 'success');
+        }
+        
+        // View detailed answers
+        function viewDetailedSheet() {
+            addMessage("📝 Detailed Response History:", 'system');
+            
+            responseSheet.responses.forEach((response, index) => {
+                setTimeout(() => {
+                    const container = document.createElement('div');
+                    container.className = `chat-message ${response.isCorrect ? 'success' : 'error'}`;
+                    container.innerHTML = `
+                        <div style="text-align: left; line-height: 1.6;">
+                            <strong>Q${response.questionNumber}:</strong> ${response.question}<br>
+                            <strong>Your Answer:</strong> ${response.userAnswer}<br>
+                            <strong>Correct Answer:</strong> ${response.correctAnswer}<br>
+                            <strong>Result:</strong> ${response.isCorrect ? '✓ Correct' : '✗ Incorrect'}<br>
+                            <strong>Time:</strong> ${response.timeElapsed}s
+                        </div>
+                    `;
+                    document.getElementById('chatMessages').appendChild(container);
+                    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+                }, index * 300);
+            });
+        }
+
+        // Ask next question
+        function askNextQuestion() {
+            const question = questions[currentQuestionIndex];
+            addMessage(question.question, 'assistant');
+            awaitingInput = true;
+            startTimer();
+            focusInput();
+        }
+
+        // Submit answer
+        function submitAnswer() {
+            if (!awaitingInput) return;
+            
+            const input = document.getElementById('chatInput');
+            const answer = input.value.trim();
+            
+            if (!answer) return;
+            
+            addMessage(answer, 'user');
+            input.value = '';
+            awaitingInput = false;
+            
+            processAnswer(answer);
+        }
+
+        // Process answer based on current state
+        function processAnswer(answer) {
+            clearTimer();
+            
+            switch(currentState) {
+                case 'getName':
+                    userName = answer;
+                    responseSheet.userName = userName;
+                    testStartTime = new Date();
+                    addMessage(`Nice to meet you, ${userName}! Let's begin the test.`, 'assistant');
+                    setTimeout(() => {
+                        currentState = 'testing';
+                        askNextQuestion();
+                    }, 1500);
+                    break;
+                    
+                case 'testing':
+                    wrongAnswer = answer;
+                    const isCorrect = checkAnswer(answer);
+                    const question = questions[currentQuestionIndex];
+                    
+                    // Record the response
+                    const responseTime = 20 - timeLeft;
+                    responseSheet.responses.push({
+                        questionNumber: currentQuestionIndex + 1,
+                        question: question.question,
+                        userAnswer: answer,
+                        correctAnswer: question.correctAnswers ? question.correctAnswers[0] : (question.correctAnswer === 'yes' ? 'Yes' : 'No'),
+                        isCorrect: isCorrect,
+                        timeElapsed: responseTime,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    if (isCorrect) {
+                        addMessage("✅ Correct!", 'success');
+                        setTimeout(() => {
+                            currentQuestionIndex++;
+                            if (currentQuestionIndex < questions.length) {
+                                askNextQuestion();
+                            } else {
+                                completeTest();
+                            }
+                        }, 1000);
+                    } else {
+                        mistakeCount++;
+                        addMessage("❌ Incorrect.", 'error');
+                        
+                        if (mistakeCount >= 2) {
+                            addMessage("⚠️ That's your second mistake. Your level will be determined now.", 'error');
+                            setTimeout(() => {
+                                determineLevel();
+                            }, 1500);
+                        } else {
+                            addMessage("⚠️ That's your first mistake. One more mistake and your level will be determined.", 'error');
+                            setTimeout(() => {
+                                currentQuestionIndex++;
+                                if (currentQuestionIndex < questions.length) {
+                                    askNextQuestion();
+                                } else {
+                                    completeTest();
+                                }
+                            }, 2000);
+                        }
+                    }
+                    break;
+                    
+                case 'askContinue':
+                    const normalized = normalizeAnswer(answer);
+                    if (normalized === 'yes' || normalized === 'y') {
+                        askPlanPreference();
+                    } else {
+                        testEndTime = new Date();
+                        responseSheet.level = userLevel;
+                        
+                        addMessage("No problem! Would you like a copy of your response sheet? (yes/no)", 'assistant');
+                        currentState = 'askResponseSheet';
+                        awaitingInput = true;
+                        focusInput();
+                    }
+                    break;
+                    
+                case 'askResponseSheet':
+                    const wantSheet = normalizeAnswer(answer);
+                    if (wantSheet === 'yes' || wantSheet === 'y') {
+                        generateResponseSheet();
+                    } else {
+                        addMessage("Thank you for taking the test! Good luck with your Korean learning journey! 🎉", 'success');
+                        awaitingInput = false;
+                        document.getElementById('chatInput').disabled = true;
+                        document.querySelector('.chat-submit').disabled = true;
+                    }
+                    break;
+                    
+                case 'getPhone':
+                    contactInfo.phone = answer;
+                    askBestTime();
+                    break;
+                    
+                case 'getTime':
+                    contactInfo.time = answer;
+                    askTimezone();
+                    break;
+                    
+                case 'getTimezone':
+                    contactInfo.timezone = answer;
+                    askEmail();
+                    break;
+                    
+                case 'getEmail':
+                    contactInfo.email = answer;
+                    finishConversation();
+                    console.log('Contact Info:', contactInfo);
+                    break;
+                    
+                case 'end':
+                    addMessage("Thank you! Feel free to explore our other resources.", 'success');
+                    awaitingInput = false;
+                    break;
+            }
+        }
+
+        // Handle Enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('chatInput');
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    submitAnswer();
+                }
+            });
+            
+            // Start the chat
+            initChat();
+        });
+
+        // Page Navigation (keep existing function)
+        function showStep(stepId) {
+            const allSteps = document.querySelectorAll('.step');
+            const currentActive = document.querySelector('.step.active');
+            
+            if (currentActive) {
+                currentActive.classList.add('fade-out');
+            }
+            
+            setTimeout(() => {
+                allSteps.forEach(step => {
+                    step.classList.remove('active', 'fade-out');
+                });
+                const targetStep = document.getElementById(stepId);
+                if (targetStep) {
+                    targetStep.classList.add('active');
+                    
+                    setTimeout(() => {
+                        window.scrollTo(0, 0);
+                        document.documentElement.scrollTop = 0;
+                        document.body.scrollTop = 0;
+                    }, 0);
+                }
+            }, currentActive ? 300 : 0);
+        }
+        
+        // Scroll management
+        (function () {
+            try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch(e){}
+
+            document.addEventListener('DOMContentLoaded', function () {
+                if (!document.getElementById('top-sentinel')) {
+                    var s = document.createElement('div');
+                    s.id = 'top-sentinel';
+                    s.style.cssText = 'height:1px;margin:0;padding:0;';
+                    document.body.insertBefore(s, document.body.firstChild);
+                }
+            });
+
+            function toTop() {
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                requestAnimationFrame(toTop);
+                setTimeout(toTop, 200);
+            });
+            window.addEventListener('load', function () { setTimeout(toTop, 0); }, { once: true });
+            window.addEventListener('pageshow', function (e) { if (e.persisted) toTop(); });
+        })();
+    </script>
+</body>
+</html>
