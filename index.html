@@ -1272,6 +1272,60 @@
             }, 1000);
         }
 
+        // Test connection to Google Apps Script
+        function testConnection() {
+            console.log('🧪 Testing connection to Google Apps Script...');
+            
+            const testCallback = 'testCallback_' + Date.now();
+            window[testCallback] = function(response) {
+                console.log('✅ CONNECTION TEST SUCCESSFUL!');
+                console.log('Response:', response);
+                delete window[testCallback];
+                const script = document.querySelector(`script[data-testcallback="${testCallback}"]`);
+                if (script && document.body.contains(script)) {
+                    document.body.removeChild(script);
+                }
+            };
+            
+            const testData = {
+                userName: 'Test User',
+                level: 'TEST',
+                totalQuestions: 1,
+                correctAnswers: 1,
+                incorrectAnswers: 0,
+                responses: [{
+                    questionNumber: 1,
+                    question: 'Test',
+                    userAnswer: 'Test',
+                    correctAnswer: 'Test',
+                    isCorrect: true
+                }]
+            };
+            
+            const script = document.createElement('script');
+            script.setAttribute('data-testcallback', testCallback);
+            const testUrl = `${SERVER_CONFIG.endpoint}?callback=${testCallback}&data=${encodeURIComponent(JSON.stringify(testData))}`;
+            console.log('Test URL:', testUrl);
+            script.src = testUrl;
+            
+            script.onerror = function(e) {
+                console.error('❌ CONNECTION TEST FAILED');
+                console.error('Error event:', e);
+                console.error('Possible causes:');
+                console.error('- Browser extension blocking the request');
+                console.error('- Ad blocker interfering');
+                console.error('- CSP (Content Security Policy) blocking');
+                console.error('- Network issue');
+                delete window[testCallback];
+            };
+            
+            script.onload = function() {
+                console.log('✅ Script tag loaded');
+            };
+            
+            document.body.appendChild(script);
+        }
+
         // Send response sheet to server using JSONP to match Google Apps Script doGet
         function sendResponseToServer() {
             if (!SERVER_CONFIG.enabled) {
@@ -1312,20 +1366,36 @@
                     }
                 };
                 
+                // Build URL with parameters
+                const dataString = JSON.stringify(responseSheet);
+                const encodedData = encodeURIComponent(dataString);
+                const fullUrl = `${SERVER_CONFIG.endpoint}?callback=${callbackName}&data=${encodedData}`;
+                
+                console.log('JSON data length:', dataString.length);
+                console.log('URL length:', fullUrl.length);
+                
+                // Check URL length (Google has ~8KB limit for URLs)
+                if (fullUrl.length > 8000) {
+                    console.error('❌ URL too long:', fullUrl.length, 'characters');
+                    console.log('Response sheet saved locally:', responseSheet);
+                    return;
+                }
+                
                 // Create script tag for JSONP
                 const script = document.createElement('script');
                 script.setAttribute('data-callback', callbackName);
+                script.setAttribute('crossorigin', 'anonymous');
+                script.src = fullUrl;
                 
-                // Build URL with parameters
-                const params = new URLSearchParams({
-                    callback: callbackName,
-                    data: JSON.stringify(responseSheet)
-                });
-                
-                script.src = `${SERVER_CONFIG.endpoint}?${params.toString()}`;
-                
-                script.onerror = function() {
-                    console.error('❌ Script loading error - check if Google Apps Script URL is correct');
+                script.onerror = function(error) {
+                    console.error('❌ Script loading error:', error);
+                    console.error('Script src:', script.src);
+                    console.error('This usually means:');
+                    console.error('1. Browser extension (ad blocker) is blocking the request');
+                    console.error('2. The Google Apps Script is not responding');
+                    console.error('3. Network/firewall issue');
+                    console.log('');
+                    console.log('🧪 Try running: testConnection()');
                     console.log('Response sheet saved locally:', responseSheet);
                     
                     // Cleanup
@@ -1335,10 +1405,15 @@
                     }
                 };
                 
+                script.onload = function() {
+                    console.log('✅ Script loaded successfully');
+                };
+                
                 // Add timeout to detect issues
                 const timeout = setTimeout(() => {
-                    console.warn('⚠️ Request taking longer than expected...');
-                }, 5000);
+                    console.warn('⚠️ Request taking longer than 10 seconds...');
+                    console.warn('The request may have failed silently');
+                }, 10000);
                 
                 // Clear timeout when callback executes
                 const originalCallback = window[callbackName];
