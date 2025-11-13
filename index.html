@@ -679,6 +679,108 @@
             margin-left: 5px;
             font-style: normal;
         }
+
+        /* Results Page Styles */
+        .mistake-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #ff6b6b;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .mistake-question {
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .mistake-answer {
+            font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+            line-height: 1.8;
+            margin: 0.5rem 0;
+        }
+
+        .mistake-your-answer {
+            color: #ff6b6b;
+        }
+
+        .mistake-correct-answer {
+            color: #90EE90;
+        }
+
+        /* Improvement Page Styles */
+        .level-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 900px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .level-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .level-header h2 {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #31afed;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            margin: 0;
+        }
+
+        .you-are-here {
+            font-size: clamp(0.7rem, 2vw, 1rem);
+            color: #ff4444;
+            font-weight: bold;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            animation: pulse-glow 1.5s ease-in-out infinite;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 68, 68, 0.2);
+            border-radius: 20px;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
+        }
+
+        .level-text {
+            font-size: clamp(0.7rem, 2vw, 0.95rem);
+            line-height: 2;
+            color: white;
+            text-align: left;
+            opacity: 0.95;
+        }
+
+        #resultsTitle {
+            font-size: clamp(1.3rem, 5vw, 2.5rem);
+        }
+
+        #resultLevel {
+            color: #ffd700;
+        }
         
         @media (max-width: 768px) {
             .hero-image img {
@@ -738,6 +840,16 @@
             .status-text {
                 font-size: clamp(0.4rem, 1vw, 0.5rem);
             }
+
+            .level-section {
+                padding: 1.5rem;
+                margin: 1.5rem auto;
+            }
+
+            .level-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
         
         @media (min-width: 769px) and (max-width: 1200px) {
@@ -796,7 +908,7 @@
                     <button onclick="submitAnswer()" id="sendButton" class="chat-submit">Send</button>
                 </div>
                 <div class="chat-button-group">
-                    <button onclick="showStep('completionPage')" class="chat-button secondary">I'm done with the test</button>
+                    <button onclick="showResultsPage()" class="chat-button secondary">I'm done with the test</button>
                 </div>
                 <div id="timerDisplay" class="timer-display"></div>
             </div>
@@ -808,6 +920,81 @@
             <div class="class-container">
                 <p class="description">Thank you for taking the level test! Your results have been recorded.</p>
                 <p class="description">We'll be in touch soon with next steps!</p>
+            </div>
+            
+            <div class="buttons">
+                <button class="primary" onclick="window.location.reload()">Take Another Test</button>
+            </div>
+        </div>
+
+        <!-- Results Page - Shows level and mistakes -->
+        <div id="resultsPage" class="step">
+            <h1 id="resultsTitle">Your Level: <span id="resultLevel"></span></h1>
+            
+            <!-- Mistakes Review Section -->
+            <div class="class-container" id="mistakesContainer" style="display: none;">
+                <h2 style="color: #ff6b6b; text-align: center; font-size: clamp(1rem, 2.5vw, 1.3rem); margin-bottom: 1.5rem;">Review Your Answers</h2>
+                <div id="mistakesList"></div>
+            </div>
+            
+            <!-- Level Description -->
+            <div class="class-container">
+                <p class="description" id="levelDescription" style="text-align: left; line-height: 2;"></p>
+            </div>
+            
+            <div class="buttons">
+                <button class="primary" onclick="showStep('improvementPage')">How can I improve?</button>
+            </div>
+        </div>
+
+        <!-- Improvement Roadmap Page - Shows all levels -->
+        <div id="improvementPage" class="step">
+            <h1>📚 Your Learning Path</h1>
+            <p class="description">See where you are and where you're heading!</p>
+            
+            <!-- Absolute Beginner Section -->
+            <div class="level-section" id="section-absolute-beginner">
+                <div class="level-header">
+                    <h2>ABSOLUTE BEGINNER</h2>
+                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
+                </div>
+                <p class="level-text">You've taken the first real step: you're looking at Korean letters and trying to read them. Your brain is waking up to a totally new sound system, and you're brave enough to say Korean out loud, even if it feels awkward. Right now, you're reading Korean with an "American mouth." You can sound out some words, but your lips, tongue, and rhythm are still very English, so your Korean sounds foreign even when you're trying your best. What does this REALLY mean? You're not "bad at Korean". You just haven't been taught how a Korean mouth moves yet. Most people don't even know that's a thing. At this stage, you don't know what you are struggling with without a visualization. You'll come into Tuesday weekly pronunciation class at 8:00 PM EST time. We'll give you customized weekly evaluations with visual graphs to visualize your progress. You'll also receive curated videos based on what pronunciation you score the lowest on.</p>
+            </div>
+            
+            <!-- Novice Section -->
+            <div class="level-section" id="section-novice">
+                <div class="level-header">
+                    <h2>NOVICE</h2>
+                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
+                </div>
+                <p class="level-text">You won't be able to carry on a conversation at this level but you still know enough to understand bits and pieces. You can slowly read and write and can even put together some basic sentences. You've done the work to get deeper into grammar and you want to take your learning seriously. You know some basic phrases, and your pronunciation is improving. You've put in enough work that Korean no longer feels like a total mystery, and you're ready to understand it more deeply. You're still relying on memorized phrases and your vocabulary is a bit weak. You feel lost with tiny but important pieces like 이에요/예요, 있어요, 이었어요/였어요, 에/에서/으로, and 은/는, 이/가, 을/를. You can read the words, but choosing the right one and building your own sentences still feels confusing. You've seen these everywhere, but you're not sure why they're used or how to choose the right one. What does this REALLY mean? It's NOT that you're not studying enough. No one explained these building blocks in a way that finally "clicks" in your brain. You feel like, "I can read… so why can't I really say what I want?" I know that exact frustration, and this is the level where we fix it. For 6 weeks, do 2 weekly classes at 8:00 PM EST (Vocabulary + Pronunciation) with targeted particle and ending drills so that you can build your own short sentences with the right grammar without freezing or copying memorized scripts. Get ready to speak on the fly.</p>
+            </div>
+            
+            <!-- Beginner Section -->
+            <div class="level-section" id="section-beginner">
+                <div class="level-header">
+                    <h2>BEGINNER</h2>
+                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
+                </div>
+                <p class="level-text">What you're doing well: You have a solid grip on the basics. Present tense feels familiar. You know plenty of vocabulary. You can introduce yourself, talk about hobbies, and say many short, simple sentences. Korean no longer feels completely foreign. Your sentences are often short, choppy, and a bit "robotic." You mostly use memorized lines instead of truly creating longer sentences. When you try to explain something a bit more detailed, you get stuck. What does this REALLY mean? You're not a beginner-beginner anymore. Your problem isn't "no vocab". Your sentences are 1 dimensional and lack substance. You're right in that painful gap where your brain knows enough pieces, but no one has shown you how to connect them into natural, flowing Korean. I see that gap very clearly, and that's exactly what we target here. At KoreanLearnin, we pinpoint where your sentences break; connectors, length, or structure. Then we give you focused drills and feedback to fix it. You'll begin with 4 weekly classes at 8:00 PM EST, including Sentence Building and Listening classes on Monday and Friday at 8:00 PM EST, so your Korean starts sounding connected, natural, and truly yours.</p>
+            </div>
+            
+            <!-- Advanced Beginner Section -->
+            <div class="level-section" id="section-advanced-beginner">
+                <div class="level-header">
+                    <h2>ADVANCED BEGINNER</h2>
+                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
+                </div>
+                <p class="level-text">You know lots of grammar, have strong vocabulary, and can create long, correct sentences when you write or have time to think slowly. But in real time, your brain works too hard. You build the sentence in English first, translate to Korean, feel a delay, and sometimes freeze. Your knowledge is stuck in the "thinking" stage instead of flowing in the "speaking" stage, and you're tired of generic advice like "just speak more." What does this REALLY mean? You need to stop relying on writing and start speaking on the fly. Look at a prompt or idea once, then turn away from the screen and say it in Korean from memory. This trains the basal ganglia (the "muscle memory" part of your brain) so Korean starts to come out automatically, not only when you have pen and paper. You'll attend rigorous speaking classes every Thursday at 8:00 PM designed to train spontaneous conversation. Our grammar software will target specific problem areas, and you'll learn to speak in "Konglish" bridges - a training technique that helps you stop translating English sentences in your head before speaking.</p>
+            </div>
+            
+            <!-- Intermediate Section -->
+            <div class="level-section" id="section-intermediate">
+                <div class="level-header">
+                    <h2>INTERMEDIATE</h2>
+                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
+                </div>
+                <p class="level-text">Placeholder for now</p>
             </div>
             
             <div class="buttons">
@@ -1096,6 +1283,85 @@
             }
         ];
 
+        // Level descriptions
+        const levelDescriptions = {
+            "ABSOLUTE BEGINNER": "You've taken the first real step: you're looking at Korean letters and trying to read them. Your brain is waking up to a totally new sound system, and you're brave enough to say Korean out loud, even if it feels awkward. Right now, you're reading Korean with an \"American mouth.\" You can sound out some words, but your lips, tongue, and rhythm are still very English, so your Korean sounds foreign even when you're trying your best. What does this REALLY mean? You're not \"bad at Korean\". You just haven't been taught how a Korean mouth moves yet. Most people don't even know that's a thing. At this stage, you don't know what you are struggling with without a visualization. You'll come into Tuesday weekly pronunciation class at 8:00 PM EST time. We'll give you customized weekly evaluations with visual graphs to visualize your progress. You'll also receive curated videos based on what pronunciation you score the lowest on.",
+            
+            "NOVICE": "You won't be able to carry on a conversation at this level but you still know enough to understand bits and pieces. You can slowly read and write and can even put together some basic sentences. You've done the work to get deeper into grammar and you want to take your learning seriously. You know some basic phrases, and your pronunciation is improving. You've put in enough work that Korean no longer feels like a total mystery, and you're ready to understand it more deeply. You're still relying on memorized phrases and your vocabulary is a bit weak. You feel lost with tiny but important pieces like 이에요/예요, 있어요, 이었어요/였어요, 에/에서/으로, and 은/는, 이/가, 을/를. You can read the words, but choosing the right one and building your own sentences still feels confusing. You've seen these everywhere, but you're not sure why they're used or how to choose the right one. What does this REALLY mean? It's NOT that you're not studying enough. No one explained these building blocks in a way that finally \"clicks\" in your brain. You feel like, \"I can read… so why can't I really say what I want?\" I know that exact frustration, and this is the level where we fix it. For 6 weeks, do 2 weekly classes at 8:00 PM EST (Vocabulary + Pronunciation) with targeted particle and ending drills so that you can build your own short sentences with the right grammar without freezing or copying memorized scripts. Get ready to speak on the fly.",
+            
+            "BEGINNER": "What you're doing well: You have a solid grip on the basics. Present tense feels familiar. You know plenty of vocabulary. You can introduce yourself, talk about hobbies, and say many short, simple sentences. Korean no longer feels completely foreign. Your sentences are often short, choppy, and a bit \"robotic.\" You mostly use memorized lines instead of truly creating longer sentences. When you try to explain something a bit more detailed, you get stuck. What does this REALLY mean? You're not a beginner-beginner anymore. Your problem isn't \"no vocab\". Your sentences are 1 dimensional and lack substance. You're right in that painful gap where your brain knows enough pieces, but no one has shown you how to connect them into natural, flowing Korean. I see that gap very clearly, and that's exactly what we target here. At KoreanLearnin, we pinpoint where your sentences break; connectors, length, or structure. Then we give you focused drills and feedback to fix it. You'll begin with 4 weekly classes at 8:00 PM EST, including Sentence Building and Listening classes on Monday and Friday at 8:00 PM EST, so your Korean starts sounding connected, natural, and truly yours.",
+            
+            "ADVANCED BEGINNER": "You know lots of grammar, have strong vocabulary, and can create long, correct sentences when you write or have time to think slowly. But in real time, your brain works too hard. You build the sentence in English first, translate to Korean, feel a delay, and sometimes freeze. Your knowledge is stuck in the \"thinking\" stage instead of flowing in the \"speaking\" stage, and you're tired of generic advice like \"just speak more.\" What does this REALLY mean? You need to stop relying on writing and start speaking on the fly. Look at a prompt or idea once, then turn away from the screen and say it in Korean from memory. This trains the basal ganglia (the \"muscle memory\" part of your brain) so Korean starts to come out automatically, not only when you have pen and paper. You'll attend rigorous speaking classes every Thursday at 8:00 PM designed to train spontaneous conversation. Our grammar software will target specific problem areas, and you'll learn to speak in \"Konglish\" bridges - a training technique that helps you stop translating English sentences in your head before speaking.",
+            
+            "INTERMEDIATE": "Placeholder for now"
+        };
+
+        // Show results page with mistakes and level description
+        function showResultsPage() {
+            // Check if level has been determined
+            if (!userLevel) {
+                addMessage("⚠️ Please complete the test first to see your results!", 'error');
+                return;
+            }
+            
+            // Populate level
+            document.getElementById('resultLevel').textContent = userLevel;
+            document.getElementById('levelDescription').textContent = levelDescriptions[userLevel] || "Congratulations on completing the test!";
+            
+            // Get incorrect answers
+            const incorrectAnswers = responseSheet.responses.filter(r => !r.isCorrect);
+            
+            if (incorrectAnswers.length > 0) {
+                const mistakesContainer = document.getElementById('mistakesContainer');
+                mistakesContainer.style.display = 'block';
+                
+                const mistakesList = document.getElementById('mistakesList');
+                mistakesList.innerHTML = '';
+                
+                incorrectAnswers.forEach(mistake => {
+                    const mistakeDiv = document.createElement('div');
+                    mistakeDiv.className = 'mistake-item';
+                    
+                    mistakeDiv.innerHTML = `
+                        <div class="mistake-question">Question ${mistake.questionNumber}: ${mistake.question}</div>
+                        <div class="mistake-answer mistake-your-answer">Your answer: ${mistake.userAnswer}</div>
+                        <div class="mistake-answer mistake-correct-answer">Correct answer: ${mistake.correctAnswer}</div>
+                    `;
+                    
+                    mistakesList.appendChild(mistakeDiv);
+                });
+            } else {
+                // No mistakes - hide the mistakes container
+                document.getElementById('mistakesContainer').style.display = 'none';
+            }
+            
+            // Show the results page
+            showStep('resultsPage');
+            
+            // Mark the user's level on improvement page
+            const levelMapping = {
+                "ABSOLUTE BEGINNER": "absolute-beginner",
+                "NOVICE": "novice",
+                "BEGINNER": "beginner",
+                "ADVANCED BEGINNER": "advanced-beginner",
+                "INTERMEDIATE": "intermediate"
+            };
+            
+            const sectionId = levelMapping[userLevel];
+            if (sectionId) {
+                // Hide all "YOU ARE HERE" markers first
+                document.querySelectorAll('.you-are-here').forEach(marker => {
+                    marker.style.display = 'none';
+                });
+                
+                // Show the marker for user's level
+                const userSection = document.querySelector(`#section-${sectionId} .you-are-here`);
+                if (userSection) {
+                    userSection.style.display = 'inline-block';
+                }
+            }
+        }
+
         // Start level test from disclaimer
         function startLevelTest() {
             showStep('levelTesterPage');
@@ -1369,6 +1635,7 @@
                         // Send to server
                         sendResponseToServer();
                         addMessage("Thank you for taking the test! Your results have been recorded. 🎉", 'success');
+                        addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
                         awaitingInput = false;
                         document.getElementById('chatInput').disabled = true;
                         document.getElementById('sendButton').disabled = true;
@@ -1412,6 +1679,7 @@
                     // Send to server
                     sendResponseToServer();
                     addMessage("Thank you for taking the test! Your results have been recorded. 🎉", 'success');
+                    addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
                     awaitingInput = false;
                     document.getElementById('chatInput').disabled = true;
                     document.getElementById('sendButton').disabled = true;
