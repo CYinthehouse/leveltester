@@ -764,8 +764,8 @@
     <script>
         // SERVER CONFIGURATION - Update this with your endpoint
         const SERVER_CONFIG = {
-            endpoint: 'https://script.google.com/macros/s/AKfycbyGNLmW3ZgWJK7O9kNymdmCZzO87Mx5kGatxfcG-jTdbvsI9yUXEEyYol0agyYMw-PO6Q/exec',  // Change this to your actual endpoint
-            enabled: true  // Set to false to disable server submission
+            endpoint: 'https://script.google.com/macros/s/AKfycbyGNLmW3ZgWJK7O9kNymdmCZzO87Mx5kGatxfcG-jTdbvsI9yUXEEyYol0agyYMw-PO6Q/exec',
+            enabled: true
         };
         
         // Level Tester State
@@ -774,11 +774,20 @@
         let currentQuestionIndex = 0;
         let mistakeCount = 0;
         let timerInterval = null;
-        let timeLeft = 20;
+        let timeLeft = 30;
         let userLevel = '';
         let wrongAnswer = '';
         let contactInfo = {};
         let awaitingInput = false;
+        
+        // Track mistakes by level for new grading system
+        let gotFirstQuestionWrong = false;
+        let mistakesByLevel = {
+            "NOVICE": 0,
+            "BEGINNER": 0,
+            "ADVANCED BEGINNER": 0,
+            "INTERMEDIATE": 0
+        };
         
         // Response tracking
         let testStartTime = null;
@@ -1028,7 +1037,7 @@
 
         // Start timer
         function startTimer() {
-            timeLeft = 20;
+            timeLeft = 30;
             updateTimerDisplay();
             
             timerInterval = setInterval(() => {
@@ -1068,7 +1077,6 @@
 
         // Handle timeout
         function handleTimeout() {
-            mistakeCount++;
             responseSheet.timeouts++;
             
             // Record the timeout response
@@ -1079,19 +1087,30 @@
                 userAnswer: '[TIMEOUT]',
                 correctAnswer: question.correctAnswers ? question.correctAnswers[0] : 'N/A',
                 isCorrect: false,
-                timeElapsed: 20,
+                timeElapsed: 30,
                 timestamp: new Date().toISOString()
             });
             
             addMessage("⏰ Time's up!", 'error');
             
-            if (mistakeCount >= 2) {
-                addMessage("⚠️ That's your second mistake. Your level will be determined now.", 'error');
+            // Track if first question wrong
+            if (currentQuestionIndex === 0) {
+                gotFirstQuestionWrong = true;
+            }
+            
+            // Track mistake by level
+            const level = question.failLevel;
+            if (level !== "ABSOLUTE BEGINNER") {
+                mistakesByLevel[level]++;
+            }
+            
+            // Check if should stop test based on new grading rules
+            if (shouldStopTest()) {
                 setTimeout(() => {
                     determineLevel();
                 }, 1500);
             } else {
-                addMessage("⚠️ That's your first mistake. One more mistake and your level will be determined.", 'error');
+                // Continue to next question
                 setTimeout(() => {
                     currentQuestionIndex++;
                     if (currentQuestionIndex < questions.length) {
@@ -1099,8 +1118,61 @@
                     } else {
                         completeTest();
                     }
-                }, 2000);
+                }, 1500);
             }
+        }
+
+        // Check if test should stop based on new grading rules
+        function shouldStopTest() {
+            // Question indices mapping:
+            // Index 0: Q1 (ABSOLUTE BEGINNER)
+            // Indices 1-4: Q2-5 (NOVICE)
+            // Indices 5-8: Q6-9 (BEGINNER)
+            // Indices 9-15: Q10-16 (ADVANCED BEGINNER)
+            // Indices 16-20: Q17-21 (INTERMEDIATE)
+            
+            const novice = mistakesByLevel["NOVICE"];
+            const beginner = mistakesByLevel["BEGINNER"];
+            const advBeginner = mistakesByLevel["ADVANCED BEGINNER"];
+            const intermediate = mistakesByLevel["INTERMEDIATE"];
+            
+            // Rule 2: 1 NOVICE wrong AND 1 of first 3 BEGINNER wrong → NOVICE
+            if (novice >= 1 && beginner >= 1 && currentQuestionIndex >= 5 && currentQuestionIndex <= 7) {
+                userLevel = "NOVICE";
+                return true;
+            }
+            
+            // Rule 3: After first 3 BEGINNER, TWO BEGINNER wrong → BEGINNER
+            if (beginner >= 2 && currentQuestionIndex >= 8) {
+                userLevel = "BEGINNER";
+                return true;
+            }
+            
+            // Rule 4: 1 BEGINNER wrong AND 1 of first 3 ADVANCED BEGINNER wrong → BEGINNER
+            if (beginner >= 1 && advBeginner >= 1 && currentQuestionIndex >= 9 && currentQuestionIndex <= 11) {
+                userLevel = "BEGINNER";
+                return true;
+            }
+            
+            // Rule 5: After first 3 ADVANCED BEGINNER, TWO ADVANCED BEGINNER wrong → ADVANCED BEGINNER
+            if (advBeginner >= 2 && currentQuestionIndex >= 12) {
+                userLevel = "ADVANCED BEGINNER";
+                return true;
+            }
+            
+            // Rule 6: 1 ADVANCED BEGINNER wrong AND 1 of first 3 INTERMEDIATE wrong → ADVANCED BEGINNER
+            if (advBeginner >= 1 && intermediate >= 1 && currentQuestionIndex >= 16 && currentQuestionIndex <= 18) {
+                userLevel = "ADVANCED BEGINNER";
+                return true;
+            }
+            
+            // Rule 7: After first 3 INTERMEDIATE, TWO INTERMEDIATE wrong → INTERMEDIATE
+            if (intermediate >= 2 && currentQuestionIndex >= 19) {
+                userLevel = "INTERMEDIATE";
+                return true;
+            }
+            
+            return false; // Continue testing
         }
 
         // Normalize answer for comparison
@@ -1139,8 +1211,13 @@
         // Determine level
         function determineLevel() {
             clearTimer();
-            const question = questions[currentQuestionIndex];
-            userLevel = question.failLevel;
+            
+            // Rule 1: If first question was wrong, always assign ABSOLUTE BEGINNER
+            if (gotFirstQuestionWrong) {
+                userLevel = "ABSOLUTE BEGINNER";
+            }
+            // Otherwise userLevel was already set by shouldStopTest()
+            
             testEndTime = new Date();
             responseSheet.level = userLevel;
             responseSheet.testDuration = Math.round((testEndTime - testStartTime) / 1000);
@@ -1176,17 +1253,17 @@
             addMessage(explanation, 'assistant');
         }
 
-        // Complete test (passed all questions)
+        // Complete test (passed all questions) - ENSURES INTERMEDIATE LEVEL
         function completeTest() {
             clearTimer();
-            userLevel = "ADVANCED";
+            userLevel = "INTERMEDIATE";
             testEndTime = new Date();
             responseSheet.level = userLevel;
             responseSheet.testDuration = Math.round((testEndTime - testStartTime) / 1000);
             
-            addMessage(`🎯 YOU ARE ADVANCED`, 'system');
+            addMessage(`🎯 YOU ARE INTERMEDIATE`, 'system');
             setTimeout(() => {
-                addMessage("Congrats! You've passed all questions!", 'success');
+                addMessage("Congrats! You've passed all questions with flying colors!", 'success');
                 setTimeout(() => {
                     // Send to server
                     sendResponseToServer();
@@ -1196,6 +1273,69 @@
                     document.querySelector('.chat-submit').disabled = true;
                 }, 1500);
             }, 1000);
+        }
+
+        // Send response sheet to server using JSONP (no CORS issues)
+        function sendResponseToServer() {
+            if (!SERVER_CONFIG.enabled) {
+                console.log('Server submission disabled');
+                return;
+            }
+            
+            try {
+                console.log('Sending response sheet to server...');
+                
+                // Prepare response sheet data
+                responseSheet.userName = userName;
+                responseSheet.level = userLevel;
+                responseSheet.totalQuestions = responseSheet.responses.length;
+                responseSheet.correctAnswers = responseSheet.responses.filter(r => r.isCorrect).length;
+                responseSheet.incorrectAnswers = responseSheet.totalQuestions - responseSheet.correctAnswers;
+                
+                // Create a unique callback name
+                const callbackName = 'jsonpCallback_' + Date.now();
+                
+                // Create global callback function
+                window[callbackName] = function(response) {
+                    console.log('✅ Response sheet successfully sent to server:', response);
+                    
+                    // Cleanup
+                    delete window[callbackName];
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script) {
+                        document.body.removeChild(script);
+                    }
+                };
+                
+                // Create script tag for JSONP
+                const script = document.createElement('script');
+                script.setAttribute('data-callback', callbackName);
+                
+                // Build URL with parameters
+                const params = new URLSearchParams({
+                    callback: callbackName,
+                    data: JSON.stringify(responseSheet)
+                });
+                
+                script.src = `${SERVER_CONFIG.endpoint}?${params.toString()}`;
+                
+                script.onerror = function() {
+                    console.error('❌ Error sending response sheet to server');
+                    console.log('Response sheet saved locally. Data:', responseSheet);
+                    
+                    // Cleanup
+                    delete window[callbackName];
+                    if (document.body.contains(script)) {
+                        document.body.removeChild(script);
+                    }
+                };
+                
+                document.body.appendChild(script);
+                
+            } catch (error) {
+                console.error('❌ Error sending response sheet to server:', error);
+                console.log('Response sheet saved locally. Data:', responseSheet);
+            }
         }
 
         // Ask if they want to continue
@@ -1247,7 +1387,7 @@
                     const question = questions[currentQuestionIndex];
                     
                     // Record the response
-                    const responseTime = 20 - timeLeft;
+                    const responseTime = 30 - timeLeft;
                     responseSheet.responses.push({
                         questionNumber: currentQuestionIndex + 1,
                         question: question.question,
@@ -1265,20 +1405,31 @@
                             if (currentQuestionIndex < questions.length) {
                                 askNextQuestion();
                             } else {
+                                // All questions answered correctly - INTERMEDIATE level
                                 completeTest();
                             }
                         }, 1000);
                     } else {
-                        mistakeCount++;
                         addMessage("❌ Incorrect.", 'error');
                         
-                        if (mistakeCount >= 2) {
-                            addMessage("⚠️ That's your second mistake. Your level will be determined now.", 'error');
+                        // Track if first question wrong
+                        if (currentQuestionIndex === 0) {
+                            gotFirstQuestionWrong = true;
+                        }
+                        
+                        // Track mistake by level
+                        const level = question.failLevel;
+                        if (level !== "ABSOLUTE BEGINNER") {
+                            mistakesByLevel[level]++;
+                        }
+                        
+                        // Check if should stop test based on new grading rules
+                        if (shouldStopTest()) {
                             setTimeout(() => {
                                 determineLevel();
                             }, 1500);
                         } else {
-                            addMessage("⚠️ That's your first mistake. One more mistake and your level will be determined.", 'error');
+                            // Continue to next question
                             setTimeout(() => {
                                 currentQuestionIndex++;
                                 if (currentQuestionIndex < questions.length) {
@@ -1286,7 +1437,7 @@
                                 } else {
                                     completeTest();
                                 }
-                            }, 2000);
+                            }, 1500);
                         }
                     }
                     break;
