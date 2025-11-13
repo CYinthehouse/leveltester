@@ -1141,17 +1141,28 @@
             clearTimer();
             const question = questions[currentQuestionIndex];
             userLevel = question.failLevel;
+            testEndTime = new Date();
+            responseSheet.level = userLevel;
+            responseSheet.testDuration = Math.round((testEndTime - testStartTime) / 1000);
             
             addMessage(`🎯 YOU ARE A ${userLevel}`, 'system');
             setTimeout(() => {
                 addMessage("Congrats!", 'success');
                 setTimeout(() => {
                     explainMistake();
+                    setTimeout(() => {
+                        // Send to server
+                        sendResponseToServer();
+                        addMessage("Thank you for taking the test! Your results have been recorded. 🎉", 'success');
+                        awaitingInput = false;
+                        document.getElementById('chatInput').disabled = true;
+                        document.querySelector('.chat-submit').disabled = true;
+                    }, 2000);
                 }, 1000);
             }, 1000);
         }
 
-        // Explain mistake and ask to continue
+        // Explain mistake
         function explainMistake() {
             const question = questions[currentQuestionIndex];
             let explanation = '';
@@ -1163,332 +1174,31 @@
             }
             
             addMessage(explanation, 'assistant');
-            
-            setTimeout(() => {
-                addMessage("Would you like to continue and see what we can do for you? (yes/no)", 'assistant');
-                currentState = 'askContinue';
-                awaitingInput = true;
-                focusInput();
-            }, 1500);
         }
 
         // Complete test (passed all questions)
         function completeTest() {
             clearTimer();
             userLevel = "ADVANCED";
+            testEndTime = new Date();
+            responseSheet.level = userLevel;
+            responseSheet.testDuration = Math.round((testEndTime - testStartTime) / 1000);
+            
             addMessage(`🎯 YOU ARE ADVANCED`, 'system');
             setTimeout(() => {
                 addMessage("Congrats! You've passed all questions!", 'success');
                 setTimeout(() => {
-                    askContinue();
-                }, 1000);
+                    // Send to server
+                    sendResponseToServer();
+                    addMessage("Thank you for taking the test! Your results have been recorded. 🎉", 'success');
+                    awaitingInput = false;
+                    document.getElementById('chatInput').disabled = true;
+                    document.querySelector('.chat-submit').disabled = true;
+                }, 1500);
             }, 1000);
         }
 
         // Ask if they want to continue
-        function askContinue() {
-            addMessage("Would you like to continue and see what we can do for you? (yes/no)", 'assistant');
-            currentState = 'askContinue';
-            awaitingInput = true;
-            focusInput();
-        }
-
-        // Ask about plan preference
-        function askPlanPreference() {
-            addMessage("What kind of plan would you prefer?", 'assistant');
-            
-            setTimeout(() => {
-                const container = document.createElement('div');
-                container.className = 'chat-message assistant';
-                container.innerHTML = `
-                    <div class="chat-button-group">
-                        <button class="button primary chat-button" onclick="selectPlan('free')">A free app</button>
-                        <button class="button class-button chat-button" onclick="selectPlan('real')">Real instruction and structured classes</button>
-                    </div>
-                `;
-                document.getElementById('chatMessages').appendChild(container);
-                document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-                awaitingInput = false;
-            }, 1000);
-        }
-
-        // Select plan
-        function selectPlan(type) {
-            if (type === 'free') {
-                addMessage("A free app", 'user');
-                setTimeout(() => {
-                    testEndTime = new Date();
-                    responseSheet.level = userLevel;
-                    
-                    addMessage("Great! We have several free resources available. Would you like a copy of your test results?", 'assistant');
-                    setTimeout(() => {
-                        generateResponseSheet();
-                    }, 1000);
-                }, 500);
-            } else {
-                addMessage("Real instruction and structured classes", 'user');
-                setTimeout(() => {
-                    addMessage("Great choice! We can create a personalized action plan for you.", 'assistant');
-                    setTimeout(() => {
-                        askPhoneNumber();
-                    }, 1500);
-                }, 500);
-            }
-        }
-
-        // Collect contact info
-        function askPhoneNumber() {
-            addMessage("What's your phone number so Mr. Calvin can discuss your personalized improvement plan?", 'assistant');
-            currentState = 'getPhone';
-            awaitingInput = true;
-            focusInput();
-        }
-
-        function askBestTime() {
-            addMessage("What time is best to call you?", 'assistant');
-            currentState = 'getTime';
-            awaitingInput = true;
-            focusInput();
-        }
-
-        function askTimezone() {
-            addMessage("What's your time zone or state?", 'assistant');
-            currentState = 'getTimezone';
-            awaitingInput = true;
-            focusInput();
-        }
-
-        function askEmail() {
-            addMessage("Finally, what's your email address?", 'assistant');
-            currentState = 'getEmail';
-            awaitingInput = true;
-            focusInput();
-        }
-
-        function finishConversation() {
-            testEndTime = new Date();
-            responseSheet.contactInfo = contactInfo;
-            
-            addMessage("Perfect! Mr. Calvin will reach out to you soon to discuss your personalized plan. Thank you! 🎉", 'success');
-            
-            setTimeout(() => {
-                generateResponseSheet();
-            }, 1500);
-            
-            awaitingInput = false;
-            document.getElementById('chatInput').disabled = true;
-            document.querySelector('.chat-submit').disabled = true;
-        }
-        
-        // Generate and display response sheet
-        function generateResponseSheet() {
-            responseSheet.userName = userName;
-            responseSheet.level = userLevel;
-            responseSheet.totalQuestions = responseSheet.responses.length;
-            responseSheet.correctAnswers = responseSheet.responses.filter(r => r.isCorrect).length;
-            responseSheet.incorrectAnswers = responseSheet.totalQuestions - responseSheet.correctAnswers;
-            
-            const duration = testEndTime ? Math.round((testEndTime - testStartTime) / 1000) : 0;
-            responseSheet.testDuration = duration;
-            
-            // Log to console for easy access
-            console.log('=== KOREAN LEVEL TEST RESPONSE SHEET ===');
-            console.log(JSON.stringify(responseSheet, null, 2));
-            console.log('=== END RESPONSE SHEET ===');
-            
-            // Send to server
-            sendResponseToServer();
-            
-            addMessage("📋 Here's your complete response sheet:", 'system');
-            
-            setTimeout(() => {
-                const container = document.createElement('div');
-                container.className = 'chat-message assistant';
-                container.innerHTML = `
-                    <div style="text-align: left; line-height: 1.8;">
-                        <strong>📊 Test Summary</strong><br>
-                        Name: ${responseSheet.userName}<br>
-                        Level: ${responseSheet.level}<br>
-                        Date: ${new Date(responseSheet.testDate).toLocaleString()}<br>
-                        Duration: ${duration} seconds<br>
-                        Questions Answered: ${responseSheet.totalQuestions}<br>
-                        ✅ Correct: ${responseSheet.correctAnswers}<br>
-                        ❌ Incorrect: ${responseSheet.incorrectAnswers}<br>
-                        ⏰ Timeouts: ${responseSheet.timeouts}<br>
-                        <br>
-                        <strong>📞 Contact Information</strong><br>
-                        Phone: ${contactInfo.phone || 'N/A'}<br>
-                        Best Time: ${contactInfo.time || 'N/A'}<br>
-                        Timezone: ${contactInfo.timezone || 'N/A'}<br>
-                        Email: ${contactInfo.email || 'N/A'}
-                    </div>
-                `;
-                document.getElementById('chatMessages').appendChild(container);
-                document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-                
-                setTimeout(() => {
-                    addDownloadButtons();
-                }, 500);
-            }, 500);
-        }
-        
-// Send response sheet to server using JSONP (no CORS issues)
-function sendResponseToServer() {
-    if (!SERVER_CONFIG.enabled) {
-        console.log('Server submission disabled');
-        return;
-    }
-    
-    try {
-        console.log('Sending response sheet to server...');
-        
-        // Create a unique callback name
-        const callbackName = 'jsonpCallback_' + Date.now();
-        
-        // Create global callback function
-        window[callbackName] = function(response) {
-            console.log('✅ Response sheet successfully sent to server:', response);
-            
-            // Cleanup
-            delete window[callbackName];
-            const script = document.querySelector(`script[data-callback="${callbackName}"]`);
-            if (script) {
-                document.body.removeChild(script);
-            }
-        };
-        
-        // Create script tag for JSONP
-        const script = document.createElement('script');
-        script.setAttribute('data-callback', callbackName);
-        
-        // Build URL with parameters
-        const params = new URLSearchParams({
-            callback: callbackName,
-            data: JSON.stringify(responseSheet)
-        });
-        
-        script.src = `${SERVER_CONFIG.endpoint}?${params.toString()}`;
-        
-        script.onerror = function() {
-            console.error('❌ Error sending response sheet to server');
-            console.log('Response sheet saved locally. Data:', responseSheet);
-            
-            // Cleanup
-            delete window[callbackName];
-            document.body.removeChild(script);
-        };
-        
-        document.body.appendChild(script);
-        
-    } catch (error) {
-        console.error('❌ Error sending response sheet to server:', error);
-        console.log('Response sheet saved locally. Data:', responseSheet);
-    }
-}
-        
-        // Add download/copy buttons
-        function addDownloadButtons() {
-            const container = document.createElement('div');
-            container.className = 'chat-message assistant';
-            container.innerHTML = `
-                <div class="chat-button-group">
-                    <button class="button primary chat-button" onclick="copyResponseSheet()">📋 Copy to Clipboard</button>
-                    <button class="button secondary chat-button" onclick="downloadResponseSheet()">💾 Download as Text</button>
-                    <button class="button class-button chat-button" onclick="viewDetailedSheet()">📝 View Detailed Answers</button>
-                </div>
-            `;
-            document.getElementById('chatMessages').appendChild(container);
-            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-        }
-        
-        // Generate text version of response sheet
-        function generateResponseText() {
-            const duration = testEndTime ? Math.round((testEndTime - testStartTime) / 1000) : 0;
-            
-            let text = `KOREAN LEVEL TEST - RESPONSE SHEET\n`;
-            text += `${'='.repeat(50)}\n\n`;
-            text += `STUDENT INFORMATION\n`;
-            text += `Name: ${responseSheet.userName}\n`;
-            text += `Level: ${responseSheet.level}\n`;
-            text += `Test Date: ${new Date(responseSheet.testDate).toLocaleString()}\n`;
-            text += `Test Duration: ${duration} seconds\n\n`;
-            
-            text += `TEST RESULTS\n`;
-            text += `Questions Answered: ${responseSheet.totalQuestions}\n`;
-            text += `Correct Answers: ${responseSheet.correctAnswers}\n`;
-            text += `Incorrect Answers: ${responseSheet.incorrectAnswers}\n`;
-            text += `Timeouts: ${responseSheet.timeouts}\n\n`;
-            
-            text += `CONTACT INFORMATION\n`;
-            text += `Phone: ${contactInfo.phone || 'N/A'}\n`;
-            text += `Best Time to Call: ${contactInfo.time || 'N/A'}\n`;
-            text += `Timezone/State: ${contactInfo.timezone || 'N/A'}\n`;
-            text += `Email: ${contactInfo.email || 'N/A'}\n\n`;
-            
-            text += `DETAILED RESPONSES\n`;
-            text += `${'='.repeat(50)}\n\n`;
-            
-            responseSheet.responses.forEach((response, index) => {
-                text += `Question ${response.questionNumber}:\n`;
-                text += `${response.question}\n`;
-                text += `User Answer: ${response.userAnswer}\n`;
-                text += `Correct Answer: ${response.correctAnswer}\n`;
-                text += `Result: ${response.isCorrect ? '✓ CORRECT' : '✗ INCORRECT'}\n`;
-                text += `Time Taken: ${response.timeElapsed}s\n`;
-                text += `\n`;
-            });
-            
-            return text;
-        }
-        
-        // Copy to clipboard
-        function copyResponseSheet() {
-            const text = generateResponseText();
-            navigator.clipboard.writeText(text).then(() => {
-                addMessage("✅ Response sheet copied to clipboard!", 'success');
-            }).catch(() => {
-                addMessage("❌ Failed to copy. Please try downloading instead.", 'error');
-            });
-        }
-        
-        // Download as text file
-        function downloadResponseSheet() {
-            const text = generateResponseText();
-            const blob = new Blob([text], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `korean_level_test_${userName.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            addMessage("✅ Response sheet downloaded!", 'success');
-        }
-        
-        // View detailed answers
-        function viewDetailedSheet() {
-            addMessage("📝 Detailed Response History:", 'system');
-            
-            responseSheet.responses.forEach((response, index) => {
-                setTimeout(() => {
-                    const container = document.createElement('div');
-                    container.className = `chat-message ${response.isCorrect ? 'success' : 'error'}`;
-                    container.innerHTML = `
-                        <div style="text-align: left; line-height: 1.6;">
-                            <strong>Q${response.questionNumber}:</strong> ${response.question}<br>
-                            <strong>Your Answer:</strong> ${response.userAnswer}<br>
-                            <strong>Correct Answer:</strong> ${response.correctAnswer}<br>
-                            <strong>Result:</strong> ${response.isCorrect ? '✓ Correct' : '✗ Incorrect'}<br>
-                            <strong>Time:</strong> ${response.timeElapsed}s
-                        </div>
-                    `;
-                    document.getElementById('chatMessages').appendChild(container);
-                    document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-                }, index * 300);
-            });
-        }
 
         // Ask next question
         function askNextQuestion() {
@@ -1579,54 +1289,6 @@ function sendResponseToServer() {
                             }, 2000);
                         }
                     }
-                    break;
-                    
-                case 'askContinue':
-                    const normalized = normalizeAnswer(answer);
-                    if (normalized === 'yes' || normalized === 'y') {
-                        askPlanPreference();
-                    } else {
-                        testEndTime = new Date();
-                        responseSheet.level = userLevel;
-                        
-                        addMessage("No problem! Would you like a copy of your response sheet? (yes/no)", 'assistant');
-                        currentState = 'askResponseSheet';
-                        awaitingInput = true;
-                        focusInput();
-                    }
-                    break;
-                    
-                case 'askResponseSheet':
-                    const wantSheet = normalizeAnswer(answer);
-                    if (wantSheet === 'yes' || wantSheet === 'y') {
-                        generateResponseSheet();
-                    } else {
-                        addMessage("Thank you for taking the test! Good luck with your Korean learning journey! 🎉", 'success');
-                        awaitingInput = false;
-                        document.getElementById('chatInput').disabled = true;
-                        document.querySelector('.chat-submit').disabled = true;
-                    }
-                    break;
-                    
-                case 'getPhone':
-                    contactInfo.phone = answer;
-                    askBestTime();
-                    break;
-                    
-                case 'getTime':
-                    contactInfo.time = answer;
-                    askTimezone();
-                    break;
-                    
-                case 'getTimezone':
-                    contactInfo.timezone = answer;
-                    askEmail();
-                    break;
-                    
-                case 'getEmail':
-                    contactInfo.email = answer;
-                    finishConversation();
-                    console.log('Contact Info:', contactInfo);
                     break;
                     
                 case 'end':
