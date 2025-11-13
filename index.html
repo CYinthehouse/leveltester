@@ -774,13 +774,13 @@
         let currentQuestionIndex = 0;
         let mistakeCount = 0;
         let timerInterval = null;
-        let timeLeft = 30;
+        let timeLeft = 25;
         let userLevel = '';
         let wrongAnswer = '';
         let contactInfo = {};
         let awaitingInput = false;
         
-        // Track mistakes by level for new grading system
+        // Track mistakes by level for grading system
         let gotFirstQuestionWrong = false;
         let mistakesByLevel = {
             "NOVICE": 0,
@@ -1037,7 +1037,7 @@
 
         // Start timer
         function startTimer() {
-            timeLeft = 30;
+            timeLeft = 25;
             updateTimerDisplay();
             
             timerInterval = setInterval(() => {
@@ -1087,7 +1087,7 @@
                 userAnswer: '[TIMEOUT]',
                 correctAnswer: question.correctAnswers ? question.correctAnswers[0] : 'N/A',
                 isCorrect: false,
-                timeElapsed: 30,
+                timeElapsed: 25,
                 timestamp: new Date().toISOString()
             });
             
@@ -1104,7 +1104,7 @@
                 mistakesByLevel[level]++;
             }
             
-            // Check if should stop test based on new grading rules
+            // Check if should stop test based on grading rules
             if (shouldStopTest()) {
                 setTimeout(() => {
                     determineLevel();
@@ -1122,14 +1122,14 @@
             }
         }
 
-        // Check if test should stop based on new grading rules
+        // Check if test should stop based on grading rules
         function shouldStopTest() {
             // Question indices mapping:
             // Index 0: Q1 (ABSOLUTE BEGINNER)
-            // Indices 1-4: Q2-5 (NOVICE)
-            // Indices 5-8: Q6-9 (BEGINNER)
-            // Indices 9-15: Q10-16 (ADVANCED BEGINNER)
-            // Indices 16-20: Q17-21 (INTERMEDIATE)
+            // Indices 1-4: Q2-5 (NOVICE) - 4 questions
+            // Indices 5-9: Q6-10 (BEGINNER) - 5 questions, first 3 are indices 5-7
+            // Indices 10-16: Q11-17 (ADVANCED BEGINNER) - 7 questions, first 3 are indices 10-12
+            // Indices 17-21: Q18-22 (INTERMEDIATE) - 5 questions, first 3 are indices 17-19
             
             const novice = mistakesByLevel["NOVICE"];
             const beginner = mistakesByLevel["BEGINNER"];
@@ -1149,25 +1149,25 @@
             }
             
             // Rule 4: 1 BEGINNER wrong AND 1 of first 3 ADVANCED BEGINNER wrong → BEGINNER
-            if (beginner >= 1 && advBeginner >= 1 && currentQuestionIndex >= 9 && currentQuestionIndex <= 11) {
+            if (beginner >= 1 && advBeginner >= 1 && currentQuestionIndex >= 10 && currentQuestionIndex <= 12) {
                 userLevel = "BEGINNER";
                 return true;
             }
             
             // Rule 5: After first 3 ADVANCED BEGINNER, TWO ADVANCED BEGINNER wrong → ADVANCED BEGINNER
-            if (advBeginner >= 2 && currentQuestionIndex >= 12) {
+            if (advBeginner >= 2 && currentQuestionIndex >= 13) {
                 userLevel = "ADVANCED BEGINNER";
                 return true;
             }
             
             // Rule 6: 1 ADVANCED BEGINNER wrong AND 1 of first 3 INTERMEDIATE wrong → ADVANCED BEGINNER
-            if (advBeginner >= 1 && intermediate >= 1 && currentQuestionIndex >= 16 && currentQuestionIndex <= 18) {
+            if (advBeginner >= 1 && intermediate >= 1 && currentQuestionIndex >= 17 && currentQuestionIndex <= 19) {
                 userLevel = "ADVANCED BEGINNER";
                 return true;
             }
             
             // Rule 7: After first 3 INTERMEDIATE, TWO INTERMEDIATE wrong → INTERMEDIATE
-            if (intermediate >= 2 && currentQuestionIndex >= 19) {
+            if (intermediate >= 2 && currentQuestionIndex >= 20) {
                 userLevel = "INTERMEDIATE";
                 return true;
             }
@@ -1212,11 +1212,11 @@
         function determineLevel() {
             clearTimer();
             
-            // Rule 1: If first question was wrong, always assign ABSOLUTE BEGINNER
+            // Rule 1: If first question was wrong, always assign ABSOLUTE BEGINNER (overrides all other rules)
             if (gotFirstQuestionWrong) {
                 userLevel = "ABSOLUTE BEGINNER";
             }
-            // Otherwise userLevel was already set by shouldStopTest()
+            // Otherwise userLevel was already set by shouldStopTest() based on the grading rules
             
             testEndTime = new Date();
             responseSheet.level = userLevel;
@@ -1387,7 +1387,7 @@
                     const question = questions[currentQuestionIndex];
                     
                     // Record the response
-                    const responseTime = 30 - timeLeft;
+                    const responseTime = 25 - timeLeft;
                     responseSheet.responses.push({
                         questionNumber: currentQuestionIndex + 1,
                         question: question.question,
@@ -1423,7 +1423,7 @@
                             mistakesByLevel[level]++;
                         }
                         
-                        // Check if should stop test based on new grading rules
+                        // Check if should stop test based on grading rules
                         if (shouldStopTest()) {
                             setTimeout(() => {
                                 determineLevel();
