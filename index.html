@@ -1272,7 +1272,7 @@
             }, 1000);
         }
 
-        // Send response sheet to server
+        // Send response sheet to server using JSONP to match Google Apps Script doGet
         function sendResponseToServer() {
             if (!SERVER_CONFIG.enabled) {
                 console.log('Server submission disabled');
@@ -1292,22 +1292,63 @@
                 
                 console.log('Data to send:', responseSheet);
                 
-                // Create form data for POST request
-                const formData = new FormData();
-                formData.append('data', JSON.stringify(responseSheet));
+                // Create a unique callback name
+                const callbackName = 'jsonpCallback_' + Date.now();
                 
-                fetch(SERVER_CONFIG.endpoint, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors'
-                })
-                .then(response => {
-                    console.log('✅ Response sheet sent successfully');
-                })
-                .catch(error => {
-                    console.error('❌ Fetch error:', error);
-                    console.log('Response sheet saved locally:', responseSheet);
+                // Create global callback function
+                window[callbackName] = function(response) {
+                    console.log('✅ Response from server:', response);
+                    if (response.success) {
+                        console.log('✅ Data successfully saved to Google Sheets');
+                    } else {
+                        console.error('❌ Server returned error:', response.error);
+                    }
+                    
+                    // Cleanup
+                    delete window[callbackName];
+                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+                    if (script && document.body.contains(script)) {
+                        document.body.removeChild(script);
+                    }
+                };
+                
+                // Create script tag for JSONP
+                const script = document.createElement('script');
+                script.setAttribute('data-callback', callbackName);
+                
+                // Build URL with parameters
+                const params = new URLSearchParams({
+                    callback: callbackName,
+                    data: JSON.stringify(responseSheet)
                 });
+                
+                script.src = `${SERVER_CONFIG.endpoint}?${params.toString()}`;
+                
+                script.onerror = function() {
+                    console.error('❌ Script loading error - check if Google Apps Script URL is correct');
+                    console.log('Response sheet saved locally:', responseSheet);
+                    
+                    // Cleanup
+                    delete window[callbackName];
+                    if (document.body.contains(script)) {
+                        document.body.removeChild(script);
+                    }
+                };
+                
+                // Add timeout to detect issues
+                const timeout = setTimeout(() => {
+                    console.warn('⚠️ Request taking longer than expected...');
+                }, 5000);
+                
+                // Clear timeout when callback executes
+                const originalCallback = window[callbackName];
+                window[callbackName] = function(response) {
+                    clearTimeout(timeout);
+                    originalCallback(response);
+                };
+                
+                document.body.appendChild(script);
+                console.log('📤 Request sent to Google Apps Script');
                 
             } catch (error) {
                 console.error('❌ Error sending response sheet to server:', error);
