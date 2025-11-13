@@ -782,6 +782,7 @@
         
         // Track mistakes by level for grading system
         let gotFirstQuestionWrong = false;
+        let totalMistakes = 0;
         let mistakesByLevel = {
             "NOVICE": 0,
             "BEGINNER": 0,
@@ -1098,6 +1099,9 @@
                 gotFirstQuestionWrong = true;
             }
             
+            // Increment total mistakes
+            totalMistakes++;
+            
             // Track mistake by level
             const level = question.failLevel;
             if (level !== "ABSOLUTE BEGINNER") {
@@ -1122,57 +1126,9 @@
             }
         }
 
-        // Check if test should stop based on grading rules
+        // Check if test should stop - stops after 2 mistakes total
         function shouldStopTest() {
-            // Question indices mapping:
-            // Index 0: Q1 (ABSOLUTE BEGINNER)
-            // Indices 1-4: Q2-5 (NOVICE) - 4 questions
-            // Indices 5-9: Q6-10 (BEGINNER) - 5 questions, first 3 are indices 5-7
-            // Indices 10-16: Q11-17 (ADVANCED BEGINNER) - 7 questions, first 3 are indices 10-12
-            // Indices 17-21: Q18-22 (INTERMEDIATE) - 5 questions, first 3 are indices 17-19
-            
-            const novice = mistakesByLevel["NOVICE"];
-            const beginner = mistakesByLevel["BEGINNER"];
-            const advBeginner = mistakesByLevel["ADVANCED BEGINNER"];
-            const intermediate = mistakesByLevel["INTERMEDIATE"];
-            
-            // Rule 2: 1 NOVICE wrong AND 1 of first 3 BEGINNER wrong → NOVICE
-            if (novice >= 1 && beginner >= 1 && currentQuestionIndex >= 5 && currentQuestionIndex <= 7) {
-                userLevel = "NOVICE";
-                return true;
-            }
-            
-            // Rule 3: After first 3 BEGINNER, TWO BEGINNER wrong → BEGINNER
-            if (beginner >= 2 && currentQuestionIndex >= 8) {
-                userLevel = "BEGINNER";
-                return true;
-            }
-            
-            // Rule 4: 1 BEGINNER wrong AND 1 of first 3 ADVANCED BEGINNER wrong → BEGINNER
-            if (beginner >= 1 && advBeginner >= 1 && currentQuestionIndex >= 10 && currentQuestionIndex <= 12) {
-                userLevel = "BEGINNER";
-                return true;
-            }
-            
-            // Rule 5: After first 3 ADVANCED BEGINNER, TWO ADVANCED BEGINNER wrong → ADVANCED BEGINNER
-            if (advBeginner >= 2 && currentQuestionIndex >= 13) {
-                userLevel = "ADVANCED BEGINNER";
-                return true;
-            }
-            
-            // Rule 6: 1 ADVANCED BEGINNER wrong AND 1 of first 3 INTERMEDIATE wrong → ADVANCED BEGINNER
-            if (advBeginner >= 1 && intermediate >= 1 && currentQuestionIndex >= 17 && currentQuestionIndex <= 19) {
-                userLevel = "ADVANCED BEGINNER";
-                return true;
-            }
-            
-            // Rule 7: After first 3 INTERMEDIATE, TWO INTERMEDIATE wrong → INTERMEDIATE
-            if (intermediate >= 2 && currentQuestionIndex >= 20) {
-                userLevel = "INTERMEDIATE";
-                return true;
-            }
-            
-            return false; // Continue testing
+            return totalMistakes >= 2;
         }
 
         // Normalize answer for comparison
@@ -1208,15 +1164,56 @@
             }
         }
 
-        // Determine level
+        // Determine level based on mistake patterns
         function determineLevel() {
             clearTimer();
             
             // Rule 1: If first question was wrong, always assign ABSOLUTE BEGINNER (overrides all other rules)
             if (gotFirstQuestionWrong) {
                 userLevel = "ABSOLUTE BEGINNER";
+            } else {
+                // Apply grading rules based on mistake patterns
+                const novice = mistakesByLevel["NOVICE"];
+                const beginner = mistakesByLevel["BEGINNER"];
+                const advBeginner = mistakesByLevel["ADVANCED BEGINNER"];
+                const intermediate = mistakesByLevel["INTERMEDIATE"];
+                
+                // Rule 2: 1 NOVICE + 1 BEGINNER → NOVICE
+                if (novice >= 1 && beginner >= 1) {
+                    userLevel = "NOVICE";
+                }
+                // Rule 3: 2 BEGINNER → BEGINNER
+                else if (beginner >= 2) {
+                    userLevel = "BEGINNER";
+                }
+                // Rule 4: 1 BEGINNER + 1 ADV BEGINNER → BEGINNER
+                else if (beginner >= 1 && advBeginner >= 1) {
+                    userLevel = "BEGINNER";
+                }
+                // Rule 5: 2 ADV BEGINNER → ADVANCED BEGINNER
+                else if (advBeginner >= 2) {
+                    userLevel = "ADVANCED BEGINNER";
+                }
+                // Rule 6: 1 ADV BEGINNER + 1 INTERMEDIATE → ADVANCED BEGINNER
+                else if (advBeginner >= 1 && intermediate >= 1) {
+                    userLevel = "ADVANCED BEGINNER";
+                }
+                // Rule 7: 2 INTERMEDIATE → INTERMEDIATE
+                else if (intermediate >= 2) {
+                    userLevel = "INTERMEDIATE";
+                }
+                // Fallback for edge cases (e.g., 2 NOVICE mistakes)
+                else if (novice >= 2) {
+                    userLevel = "NOVICE";
+                }
+                else {
+                    // Default to the lowest level where a mistake occurred
+                    if (novice > 0) userLevel = "NOVICE";
+                    else if (beginner > 0) userLevel = "BEGINNER";
+                    else if (advBeginner > 0) userLevel = "ADVANCED BEGINNER";
+                    else if (intermediate > 0) userLevel = "INTERMEDIATE";
+                }
             }
-            // Otherwise userLevel was already set by shouldStopTest() based on the grading rules
             
             testEndTime = new Date();
             responseSheet.level = userLevel;
@@ -1275,7 +1272,7 @@
             }, 1000);
         }
 
-        // Send response sheet to server using JSONP (no CORS issues)
+        // Send response sheet to server
         function sendResponseToServer() {
             if (!SERVER_CONFIG.enabled) {
                 console.log('Server submission disabled');
@@ -1284,6 +1281,7 @@
             
             try {
                 console.log('Sending response sheet to server...');
+                console.log('Endpoint:', SERVER_CONFIG.endpoint);
                 
                 // Prepare response sheet data
                 responseSheet.userName = userName;
@@ -1292,45 +1290,24 @@
                 responseSheet.correctAnswers = responseSheet.responses.filter(r => r.isCorrect).length;
                 responseSheet.incorrectAnswers = responseSheet.totalQuestions - responseSheet.correctAnswers;
                 
-                // Create a unique callback name
-                const callbackName = 'jsonpCallback_' + Date.now();
+                console.log('Data to send:', responseSheet);
                 
-                // Create global callback function
-                window[callbackName] = function(response) {
-                    console.log('✅ Response sheet successfully sent to server:', response);
-                    
-                    // Cleanup
-                    delete window[callbackName];
-                    const script = document.querySelector(`script[data-callback="${callbackName}"]`);
-                    if (script) {
-                        document.body.removeChild(script);
-                    }
-                };
+                // Create form data for POST request
+                const formData = new FormData();
+                formData.append('data', JSON.stringify(responseSheet));
                 
-                // Create script tag for JSONP
-                const script = document.createElement('script');
-                script.setAttribute('data-callback', callbackName);
-                
-                // Build URL with parameters
-                const params = new URLSearchParams({
-                    callback: callbackName,
-                    data: JSON.stringify(responseSheet)
+                fetch(SERVER_CONFIG.endpoint, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors'
+                })
+                .then(response => {
+                    console.log('✅ Response sheet sent successfully');
+                })
+                .catch(error => {
+                    console.error('❌ Fetch error:', error);
+                    console.log('Response sheet saved locally:', responseSheet);
                 });
-                
-                script.src = `${SERVER_CONFIG.endpoint}?${params.toString()}`;
-                
-                script.onerror = function() {
-                    console.error('❌ Error sending response sheet to server');
-                    console.log('Response sheet saved locally. Data:', responseSheet);
-                    
-                    // Cleanup
-                    delete window[callbackName];
-                    if (document.body.contains(script)) {
-                        document.body.removeChild(script);
-                    }
-                };
-                
-                document.body.appendChild(script);
                 
             } catch (error) {
                 console.error('❌ Error sending response sheet to server:', error);
@@ -1416,6 +1393,9 @@
                         if (currentQuestionIndex === 0) {
                             gotFirstQuestionWrong = true;
                         }
+                        
+                        // Increment total mistakes
+                        totalMistakes++;
                         
                         // Track mistake by level
                         const level = question.failLevel;
