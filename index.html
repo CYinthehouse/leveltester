@@ -1332,42 +1332,59 @@
             }, 500);
         }
         
-        // Send response sheet to server
-        async function sendResponseToServer() {
-            if (!SERVER_CONFIG.enabled) {
-                console.log('Server submission disabled');
-                return;
-            }
+// Send response sheet to server using JSONP (no CORS issues)
+function sendResponseToServer() {
+    if (!SERVER_CONFIG.enabled) {
+        console.log('Server submission disabled');
+        return;
+    }
+    
+    try {
+        console.log('Sending response sheet to server...');
+        
+        // Create a unique callback name
+        const callbackName = 'jsonpCallback_' + Date.now();
+        
+        // Create global callback function
+        window[callbackName] = function(response) {
+            console.log('✅ Response sheet successfully sent to server:', response);
             
-            try {
-                console.log('Sending response sheet to server...');
-                
-                const response = await fetch(SERVER_CONFIG.endpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(responseSheet)
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Server responded with status: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                console.log('✅ Response sheet successfully sent to server:', result);
-                
-                // Optionally show success message to user
-                // addMessage("✅ Your results have been saved!", 'success');
-                
-            } catch (error) {
-                console.error('❌ Error sending response sheet to server:', error);
-                console.log('Response sheet saved locally. Data:', responseSheet);
-                
-                // Optionally show error message to user
-                // addMessage("⚠️ Unable to save to server, but your results are available to download.", 'error');
+            // Cleanup
+            delete window[callbackName];
+            const script = document.querySelector(`script[data-callback="${callbackName}"]`);
+            if (script) {
+                document.body.removeChild(script);
             }
-        }
+        };
+        
+        // Create script tag for JSONP
+        const script = document.createElement('script');
+        script.setAttribute('data-callback', callbackName);
+        
+        // Build URL with parameters
+        const params = new URLSearchParams({
+            callback: callbackName,
+            data: JSON.stringify(responseSheet)
+        });
+        
+        script.src = `${SERVER_CONFIG.endpoint}?${params.toString()}`;
+        
+        script.onerror = function() {
+            console.error('❌ Error sending response sheet to server');
+            console.log('Response sheet saved locally. Data:', responseSheet);
+            
+            // Cleanup
+            delete window[callbackName];
+            document.body.removeChild(script);
+        };
+        
+        document.body.appendChild(script);
+        
+    } catch (error) {
+        console.error('❌ Error sending response sheet to server:', error);
+        console.log('Response sheet saved locally. Data:', responseSheet);
+    }
+}
         
         // Add download/copy buttons
         function addDownloadButtons() {
