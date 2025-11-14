@@ -970,29 +970,132 @@
             vertical-align: middle;
         }
 
-        /* SMALLER audio section for RESULTS PAGE only */
-        #resultsPage .audio-help-section {
+        /* Quiz section for NOVICE level */
+        .quiz-help-section {
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+
+        .quiz-help-header {
+            text-align: center;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            color: #31afed;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-question {
+            text-align: center;
+            font-size: clamp(0.8rem, 2.3vw, 1.1rem);
+            color: #ffd700;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+
+        /* Quiz button base styles - same as audio buttons */
+        .quiz-button {
+            position: relative;
+            overflow: hidden;
+            padding: clamp(12px, 3vw, 18px) clamp(20px, 4vw, 30px);
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Press Start 2P', cursive;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+
+        /* Incorrect buttons - RED */
+        .quiz-button.incorrect {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Correct button - GREEN */
+        .quiz-button.correct {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Shine animation for quiz buttons */
+        .quiz-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            left: -100%;
+            transition: all 0.65s ease-in-out;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .quiz-button.incorrect:hover {
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
+        }
+
+        .quiz-button.correct:hover {
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
+        }
+
+        .quiz-button:hover::before {
+            left: 100%;
+        }
+
+        .quiz-button:active {
+            transform: translateY(-1px) scale(1);
+        }
+
+        /* SMALLER quiz section for RESULTS PAGE only */
+        #resultsPage .quiz-help-section {
             max-width: 450px;
         }
 
-        #resultsPage .audio-help-header {
+        #resultsPage .quiz-help-header {
             font-size: clamp(0.7rem, 2vw, 0.9rem);
             margin-bottom: 1rem;
         }
 
-        #resultsPage .audio-grid {
+        #resultsPage .quiz-question {
+            font-size: clamp(0.65rem, 2vw, 0.85rem);
+            margin-bottom: 1rem;
+        }
+
+        #resultsPage .quiz-grid {
             gap: 0.8rem;
             padding: 0 0.8rem;
         }
 
-        #resultsPage .audio-button {
+        #resultsPage .quiz-button {
             padding: clamp(10px, 2.5vw, 14px) clamp(16px, 3.5vw, 24px);
             font-size: clamp(0.65rem, 2vw, 0.85rem);
             min-height: 50px;
-        }
-
-        #resultsPage .korean-char {
-            font-size: 1.8em;
         }
         
         @media (max-width: 768px) {
@@ -1168,7 +1271,7 @@
                 <div id="mistakesList"></div>
             </div>
 
-            <!-- Audio Help Section - Only for ABSOLUTE BEGINNER - SMALLER on results page -->
+            <!-- Audio Help Section - Only for ABSOLUTE BEGINNER -->
             <div class="audio-help-section" id="audioHelpSection" style="display: none;">
                 <h3 class="audio-help-header">How We Can Help You</h3>
                 <div class="audio-grid">
@@ -1176,6 +1279,18 @@
                     <button class="audio-button wrong" onclick="playAudio('wrongM')">Wrong <span class="korean-char">ㅁ</span></button>
                     <button class="audio-button correct" onclick="playAudio('correctN')">Correct <span class="korean-char">ㄴ</span></button>
                     <button class="audio-button correct" onclick="playAudio('correctM')">Correct <span class="korean-char">ㅁ</span></button>
+                </div>
+            </div>
+
+            <!-- Quiz Help Section - Only for NOVICE -->
+            <div class="quiz-help-section" id="quizHelpSection" style="display: none;">
+                <h3 class="quiz-help-header">How We Can Help You</h3>
+                <p class="quiz-question">Q. How do you say "I was at home" in Korean?</p>
+                <div class="quiz-grid">
+                    <button class="quiz-button correct">a. 저는 집에 있었어요 ✅</button>
+                    <button class="quiz-button incorrect">b. 저는 집이에요 ❌</button>
+                    <button class="quiz-button incorrect">c. 저는 집에 있어요 ❌</button>
+                    <button class="quiz-button incorrect">d. 저는 집이었어요 ❌</button>
                 </div>
             </div>
             
@@ -1226,6 +1341,18 @@
                 <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Tiny but essential pieces (이에요/예요, 있어요, 이었어요/였어요, 에/에서/으로, 은/는 vs. 이/가, 을/를) keep tripping you up. You can read the words, but choosing the right one and building your own sentences still feels confusing. You see these everywhere, but no one has ever explained them in a way that finally clicks, so you're stuck thinking, "I can read… so why can't I actually say what I want?"</p>
                 <p class="level-text">So what does this REALLY mean? It's not that you're not studying. You just haven't been taught these building blocks clearly. This is the level where we fix that!</p>
                 <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> For 6 weeks, join our Tuesday and Wednesday classes at 8 PM EST (Vocabulary + Pronunciation) with targeted particle and ending drills, so you can build your own short sentences with the right grammar -- without freezing or relying on memorized scripts. Get ready to speak on the fly!</p>
+            </div>
+
+            <!-- Quiz Help Section - For Improvement Page - REGULAR SIZE -->
+            <div class="quiz-help-section" id="quizHelpSectionImprovement" style="display: none;">
+                <h3 class="quiz-help-header">How We Can Help You</h3>
+                <p class="quiz-question">Q. How do you say "I was at home" in Korean?</p>
+                <div class="quiz-grid">
+                    <button class="quiz-button correct">a. 저는 집에 있었어요 ✅</button>
+                    <button class="quiz-button incorrect">b. 저는 집이에요 ❌</button>
+                    <button class="quiz-button incorrect">c. 저는 집에 있어요 ❌</button>
+                    <button class="quiz-button incorrect">d. 저는 집이었어요 ❌</button>
+                </div>
             </div>
             
             <div class="arrow-separator">
@@ -1675,6 +1802,14 @@
             } else {
                 audioSection.style.display = 'none';
             }
+
+            // Show quiz help section ONLY for NOVICE
+            const quizSection = document.getElementById('quizHelpSection');
+            if (userLevel === 'NOVICE') {
+                quizSection.style.display = 'block';
+            } else {
+                quizSection.style.display = 'none';
+            }
             
             // Show the results page
             showStep('resultsPage');
@@ -1707,6 +1842,14 @@
                     audioSectionImprovement.style.display = 'block';
                 } else {
                     audioSectionImprovement.style.display = 'none';
+                }
+
+                // Show/hide quiz section on improvement page based on level
+                const quizSectionImprovement = document.getElementById('quizHelpSectionImprovement');
+                if (userLevel === 'NOVICE') {
+                    quizSectionImprovement.style.display = 'block';
+                } else {
+                    quizSectionImprovement.style.display = 'none';
                 }
             }
         }
