@@ -6,6 +6,9 @@
     <title>KoreanLearnin</title>
     <script type="text/javascript"> (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", "tt08azyz1t"); </script>
     
+    <!-- Email Octopus Waitlist Form -->
+    <script async src="https://eocampaign1.com/form/f4d7ea20-c115-11f0-832b-93a8e7fa134f.js" data-form="f4d7ea20-c115-11f0-832b-93a8e7fa134f"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -289,6 +292,82 @@
             color: #31afed;
             text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
         }
+
+        /* Email Octopus Popup Styles */
+        .email-popup-content {
+            max-width: 500px;
+        }
+
+        .email-popup-content h2 {
+            color: #FFD700;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+        }
+
+        .email-popup-content p {
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+        }
+
+        /* Style the Email Octopus form */
+        #emailOctopusContainer input[type="email"] {
+            width: 100%;
+            padding: 1rem;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-family: 'Press Start 2P', cursive;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        #emailOctopusContainer input[type="email"]:focus {
+            outline: none;
+            border-color: #31afed;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        #emailOctopusContainer button[type="submit"] {
+            width: 100%;
+            padding: clamp(12px, 3vw, 18px) clamp(24px, 5vw, 40px);
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Press Start 2P', cursive;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        #emailOctopusContainer button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
+        }
+
+        #emailOctopusContainer .success-message,
+        #emailOctopusContainer .error-message {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+
+        #emailOctopusContainer .success-message {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        #emailOctopusContainer .error-message {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
 
         .class-container {
             background: rgba(255, 255, 255, 0.1);
@@ -1537,6 +1616,16 @@
         </div>
     </div>
 
+    <!-- Email Octopus Popup -->
+    <div id="emailPopup" class="popup-overlay">
+        <div class="popup-content email-popup-content">
+            <button class="popup-close" onclick="closeEmailPopup()">×</button>
+            <h2>Join the Waitlist! 🎉</h2>
+            <p style="margin-bottom: 1.5rem;">Enter your email to get notified about Korean classes at your level!</p>
+            <div id="emailOctopusContainer"></div>
+        </div>
+    </div>
+
     <!-- Audio elements for pronunciation examples -->
     <audio id="audio-wrongN" preload="auto">
         <source src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/wrong_n.mp3?v=1763085677" type="audio/mpeg">
@@ -1570,7 +1659,6 @@
         let contactInfo = {};
         let awaitingInput = false;
         let userEmail = '';
-        let emailConfirmed = false;
         
         /* 
         GRADING SYSTEM:
@@ -2279,11 +2367,10 @@
                 setTimeout(() => {
                     explainMistake();
                     setTimeout(() => {
-                        // Ask for email to sign up for waitlist
-                        currentState = 'getEmail';
-                        addMessage("To sign up for the waitlist for Korean classes, please enter your email address:", 'assistant');
-                        awaitingInput = true;
-                        focusInput();
+                        // Show Email Octopus popup instead of asking in chat
+                        addMessage("Please complete the form that appears to join the waitlist!", 'assistant');
+                        showEmailPopup();
+                        awaitingInput = false;
                     }, 2000);
                 }, 1000);
             }, 1000);
@@ -2319,11 +2406,10 @@
             setTimeout(() => {
                 addMessage("Congrats! You've passed all questions with flying colors!", 'success');
                 setTimeout(() => {
-                    // Ask for email to sign up for waitlist
-                    currentState = 'getEmail';
-                    addMessage("To sign up for the waitlist for Korean classes, please enter your email address:", 'assistant');
-                    awaitingInput = true;
-                    focusInput();
+                    // Show Email Octopus popup instead of asking in chat
+                    addMessage("Please complete the form that appears to join the waitlist!", 'assistant');
+                    showEmailPopup();
+                    awaitingInput = false;
                 }, 1500);
             }, 1000);
         }
@@ -2611,60 +2697,99 @@
                     }
                     break;
                     
-                case 'getEmail':
-                    userEmail = answer;
-                    responseSheet.email = userEmail;
-                    addMessage(`Is this email correct? ${userEmail}`, 'assistant');
-                    addMessage("Please answer 'yes' or 'no'", 'assistant');
-                    currentState = 'confirmEmail';
-                    awaitingInput = true;
-                    break;
-                    
-                case 'confirmEmail':
-                    const confirmation = answer.toLowerCase().trim();
-                    if (confirmation === 'yes' || confirmation === 'y') {
-                        // Email confirmed
-                        emailConfirmed = true;
-                        // Send to server
-                        sendResponseToServer();
-                        addMessage("Thank you for signing up for the waitlist! Your results have been recorded. 🎉", 'success');
-                        addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
-                        awaitingInput = false;
-                        document.getElementById('chatInput').disabled = true;
-                        document.getElementById('sendButton').disabled = true;
-                        document.getElementById('sendButton').style.opacity = '0.5';
-                        document.getElementById('sendButton').style.cursor = 'not-allowed';
-                    } else if (confirmation === 'no' || confirmation === 'n') {
-                        // Email incorrect, ask again but don't confirm this time
-                        addMessage("Please enter the correct email address:", 'assistant');
-                        currentState = 'getCorrectEmail';
-                        awaitingInput = true;
-                    } else {
-                        addMessage("Please answer 'yes' or 'no'", 'assistant');
-                        awaitingInput = true;
-                    }
-                    break;
-                    
-                case 'getCorrectEmail':
-                    userEmail = answer;
-                    responseSheet.email = userEmail;
-                    emailConfirmed = true;
-                    // Send to server
-                    sendResponseToServer();
-                    addMessage("Thank you for signing up for the waitlist! Your results have been recorded. 🎉", 'success');
-                    addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
-                    awaitingInput = false;
-                    document.getElementById('chatInput').disabled = true;
-                    document.getElementById('sendButton').disabled = true;
-                    document.getElementById('sendButton').style.opacity = '0.5';
-                    document.getElementById('sendButton').style.cursor = 'not-allowed';
-                    break;
-                    
                 case 'end':
                     addMessage("Thank you! Feel free to explore our other resources.", 'success');
                     awaitingInput = false;
                     break;
             }
+        }
+
+        // Show Email Octopus popup
+        function showEmailPopup() {
+            const popup = document.getElementById('emailPopup');
+            popup.classList.add('active');
+            
+            // Wait for Email Octopus form to load, then move it to our container
+            const checkFormInterval = setInterval(() => {
+                const eoForm = document.querySelector('.eomf-form');
+                if (eoForm) {
+                    clearInterval(checkFormInterval);
+                    
+                    // Move the form to our popup container
+                    const container = document.getElementById('emailOctopusContainer');
+                    container.appendChild(eoForm);
+                    
+                    // Monitor form submission
+                    monitorEmailOctopusForm(eoForm);
+                }
+            }, 100);
+            
+            // Timeout after 10 seconds if form doesn't load
+            setTimeout(() => {
+                clearInterval(checkFormInterval);
+            }, 10000);
+        }
+
+        // Close Email Octopus popup
+        function closeEmailPopup() {
+            const popup = document.getElementById('emailPopup');
+            popup.classList.remove('active');
+        }
+
+        // Monitor Email Octopus form for submission
+        function monitorEmailOctopusForm(form) {
+            // Find the email input field
+            const emailInput = form.querySelector('input[type="email"]');
+            
+            // Monitor form submission
+            form.addEventListener('submit', function(e) {
+                // Capture the email value
+                if (emailInput && emailInput.value) {
+                    userEmail = emailInput.value;
+                    responseSheet.email = userEmail;
+                    console.log('Email captured from Email Octopus:', userEmail);
+                }
+            });
+            
+            // Also watch for successful submission (Email Octopus shows success message)
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        // Check if success message was added
+                        if (node.classList && (node.classList.contains('success-message') || node.classList.contains('eomf-success-message'))) {
+                            console.log('Email Octopus form submitted successfully!');
+                            
+                            // Make sure we captured the email
+                            if (emailInput && emailInput.value && !userEmail) {
+                                userEmail = emailInput.value;
+                                responseSheet.email = userEmail;
+                            }
+                            
+                            // Send to Google Sheets
+                            if (userEmail) {
+                                sendResponseToServer();
+                                
+                                // Show success message in chat
+                                setTimeout(() => {
+                                    addMessage("Thank you for joining the waitlist! 🎉", 'success');
+                                    addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
+                                    
+                                    // Close popup after a delay
+                                    setTimeout(() => {
+                                        closeEmailPopup();
+                                    }, 2000);
+                                }, 500);
+                            }
+                        }
+                    });
+                });
+            });
+            
+            // Observe the form for changes
+            observer.observe(form, {
+                childList: true,
+                subtree: true
+            });
         }
 
         // Handle Enter key
