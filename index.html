@@ -2287,29 +2287,22 @@
                 setTimeout(() => {
                     explainMistake();
                     setTimeout(() => {
-                        // Directly trigger Email Octopus popup
+                        // Trigger Email Octopus popup
                         addMessage("Opening waitlist form...", 'assistant');
                         
                         setTimeout(() => {
-                            // Check if Email Octopus is loaded and trigger popup
-                            if (window.EO && window.EO.openForm) {
-                                window.EO.openForm('f4d7ea20-c115-11f0-832b-93a8e7fa134f');
-                            } else if (window.emailoctopus) {
-                                window.emailoctopus.openForm('f4d7ea20-c115-11f0-832b-93a8e7fa134f');
-                            } else {
-                                // Fallback: create trigger and click it programmatically
-                                const trigger = document.createElement('a');
-                                trigger.href = '#';
-                                trigger.className = 'eo-form-trigger';
-                                trigger.setAttribute('data-form', 'f4d7ea20-c115-11f0-832b-93a8e7fa134f');
-                                trigger.style.display = 'none';
-                                document.body.appendChild(trigger);
-                                
-                                // Wait a moment then click it
-                                setTimeout(() => {
-                                    trigger.click();
-                                }, 100);
-                            }
+                            // Create Email Octopus trigger link with correct attribute
+                            const trigger = document.createElement('a');
+                            trigger.href = '#';
+                            trigger.setAttribute('data-eo-form-toggle-id', 'f4d7ea20-c115-11f0-832b-93a8e7fa134f');
+                            trigger.style.display = 'none';
+                            document.body.appendChild(trigger);
+                            
+                            // Click it to open the popup
+                            setTimeout(() => {
+                                trigger.click();
+                                console.log('Email Octopus popup triggered');
+                            }, 300);
                             
                             // Start monitoring for form
                             monitorEmailOctopusForm();
@@ -2351,29 +2344,22 @@
             setTimeout(() => {
                 addMessage("Congrats! You've passed all questions with flying colors!", 'success');
                 setTimeout(() => {
-                    // Directly trigger Email Octopus popup
+                    // Trigger Email Octopus popup
                     addMessage("Opening waitlist form...", 'assistant');
                     
                     setTimeout(() => {
-                        // Check if Email Octopus is loaded and trigger popup
-                        if (window.EO && window.EO.openForm) {
-                            window.EO.openForm('f4d7ea20-c115-11f0-832b-93a8e7fa134f');
-                        } else if (window.emailoctopus) {
-                            window.emailoctopus.openForm('f4d7ea20-c115-11f0-832b-93a8e7fa134f');
-                        } else {
-                            // Fallback: create trigger and click it programmatically
-                            const trigger = document.createElement('a');
-                            trigger.href = '#';
-                            trigger.className = 'eo-form-trigger';
-                            trigger.setAttribute('data-form', 'f4d7ea20-c115-11f0-832b-93a8e7fa134f');
-                            trigger.style.display = 'none';
-                            document.body.appendChild(trigger);
-                            
-                            // Wait a moment then click it
-                            setTimeout(() => {
-                                trigger.click();
-                            }, 100);
-                        }
+                        // Create Email Octopus trigger link with correct attribute
+                        const trigger = document.createElement('a');
+                        trigger.href = '#';
+                        trigger.setAttribute('data-eo-form-toggle-id', 'f4d7ea20-c115-11f0-832b-93a8e7fa134f');
+                        trigger.style.display = 'none';
+                        document.body.appendChild(trigger);
+                        
+                        // Click it to open the popup
+                        setTimeout(() => {
+                            trigger.click();
+                            console.log('Email Octopus popup triggered');
+                        }, 300);
                         
                         // Start monitoring for form
                         monitorEmailOctopusForm();
