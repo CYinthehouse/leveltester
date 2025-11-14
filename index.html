@@ -1175,6 +1175,12 @@
             margin-bottom: 1rem;
             font-weight: normal;
         }
+
+        /* Email Octopus trigger button hover */
+        .eo-form-trigger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6) !important;
+        }
         
         @media (max-width: 768px) {
             .hero-image img {
@@ -2281,9 +2287,23 @@
                 setTimeout(() => {
                     explainMistake();
                     setTimeout(() => {
-                        // Show Email Octopus popup instead of asking in chat
-                        addMessage("Please complete the form that appears to join the waitlist!", 'assistant');
-                        showEmailPopup();
+                        // Show message with link to trigger Email Octopus form
+                        addMessage("Click the button below to join the waitlist for Korean classes at your level!", 'assistant');
+                        
+                        // Add Email Octopus trigger button to chat
+                        const messagesDiv = document.getElementById('chatMessages');
+                        const buttonDiv = document.createElement('div');
+                        buttonDiv.className = 'chat-message assistant';
+                        buttonDiv.style.textAlign = 'center';
+                        buttonDiv.innerHTML = '<a href="#" class="eo-form-trigger" data-form="f4d7ea20-c115-11f0-832b-93a8e7fa134f" style="display: inline-block; padding: 1rem 2rem; background: linear-gradient(45deg, #2ecc71, #27ae60); color: white; text-decoration: none; border-radius: 50px; font-family: \'Press Start 2P\', cursive; font-size: clamp(0.7rem, 2vw, 0.9rem); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); transition: all 0.3s ease;">Join Waitlist 🎉</a>';
+                        messagesDiv.appendChild(buttonDiv);
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        
+                        // Set up monitoring for Email Octopus form
+                        setTimeout(() => {
+                            monitorEmailOctopusForm();
+                        }, 500);
+                        
                         awaitingInput = false;
                     }, 2000);
                 }, 1000);
@@ -2320,9 +2340,23 @@
             setTimeout(() => {
                 addMessage("Congrats! You've passed all questions with flying colors!", 'success');
                 setTimeout(() => {
-                    // Show Email Octopus popup instead of asking in chat
-                    addMessage("Please complete the form that appears to join the waitlist!", 'assistant');
-                    showEmailPopup();
+                    // Show message with link to trigger Email Octopus form
+                    addMessage("Click the button below to join the waitlist for Korean classes at your level!", 'assistant');
+                    
+                    // Add Email Octopus trigger button to chat
+                    const messagesDiv = document.getElementById('chatMessages');
+                    const buttonDiv = document.createElement('div');
+                    buttonDiv.className = 'chat-message assistant';
+                    buttonDiv.style.textAlign = 'center';
+                    buttonDiv.innerHTML = '<a href="#" class="eo-form-trigger" data-form="f4d7ea20-c115-11f0-832b-93a8e7fa134f" style="display: inline-block; padding: 1rem 2rem; background: linear-gradient(45deg, #2ecc71, #27ae60); color: white; text-decoration: none; border-radius: 50px; font-family: \'Press Start 2P\', cursive; font-size: clamp(0.7rem, 2vw, 0.9rem); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); transition: all 0.3s ease;">Join Waitlist 🎉</a>';
+                    messagesDiv.appendChild(buttonDiv);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    
+                    // Set up monitoring for Email Octopus form
+                    setTimeout(() => {
+                        monitorEmailOctopusForm();
+                    }, 500);
+                    
                     awaitingInput = false;
                 }, 1500);
             }, 1000);
@@ -2611,6 +2645,16 @@
                     }
                     break;
                     
+                case 'captureEmail':
+                    userEmail = answer;
+                    responseSheet.email = userEmail;
+                    // Send to server
+                    sendResponseToServer();
+                    addMessage("Thank you! Your results have been recorded. 🎉", 'success');
+                    addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
+                    awaitingInput = false;
+                    break;
+                    
                 case 'end':
                     addMessage("Thank you! Feel free to explore our other resources.", 'success');
                     awaitingInput = false;
@@ -2618,54 +2662,77 @@
             }
         }
 
-        // Show Email Octopus popup
-        function showEmailPopup() {
-            // The Email Octopus script should automatically create a form on the page
-            // We just need to monitor it for submission
-            
-            setTimeout(() => {
-                monitorEmailOctopusForm();
-            }, 500);
-        }
-
         // Monitor Email Octopus form for submission
         function monitorEmailOctopusForm() {
-            // Find the Email Octopus form
+            // Find the Email Octopus form - it may appear after clicking the trigger
             const checkForForm = setInterval(() => {
-                const eoForm = document.querySelector('.eomf-form') || document.querySelector('form[action*="emailoctopus"]');
+                const eoForm = document.querySelector('.eo-form') || 
+                               document.querySelector('[class*="emailoctopus"]') || 
+                               document.querySelector('form[action*="emailoctopus"]') ||
+                               document.querySelector('iframe[src*="emailoctopus"]');
                 
                 if (eoForm) {
-                    clearInterval(checkForForm);
-                    console.log('Found Email Octopus form');
+                    console.log('Found Email Octopus form element');
                     
-                    // Find the email input field
-                    const emailInput = eoForm.querySelector('input[type="email"]');
-                    
-                    if (emailInput) {
-                        // Monitor form submission
-                        eoForm.addEventListener('submit', function(e) {
-                            // Capture the email value
-                            if (emailInput && emailInput.value) {
-                                userEmail = emailInput.value;
-                                responseSheet.email = userEmail;
-                                console.log('Email captured from Email Octopus:', userEmail);
-                                
-                                // Send to Google Sheets after a short delay (let Email Octopus finish)
+                    // If it's an iframe, we need to handle it differently
+                    if (eoForm.tagName === 'IFRAME') {
+                        console.log('Email Octopus is using iframe');
+                        // Try to detect when iframe form is submitted by monitoring URL or postMessage
+                        window.addEventListener('message', function(event) {
+                            // Email Octopus may send success message via postMessage
+                            if (event.data && (event.data.type === 'emailoctopus-success' || event.data.success)) {
+                                console.log('Email Octopus form submitted via iframe');
+                                // Prompt user for email since we can't access iframe content
                                 setTimeout(() => {
-                                    sendResponseToServer();
-                                    addMessage("Thank you for joining the waitlist! 🎉", 'success');
-                                    addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
-                                }, 1000);
+                                    promptForEmail();
+                                }, 500);
                             }
                         });
+                    } else {
+                        // It's a regular form element
+                        clearInterval(checkForForm);
+                        
+                        // Find the email input field
+                        const emailInput = eoForm.querySelector('input[type="email"]') || 
+                                         eoForm.querySelector('input[name="emailAddress"]') ||
+                                         eoForm.querySelector('input[name="email"]');
+                        
+                        if (emailInput) {
+                            console.log('Found email input in Email Octopus form');
+                            
+                            // Monitor form submission
+                            eoForm.addEventListener('submit', function(e) {
+                                // Capture the email value
+                                if (emailInput && emailInput.value) {
+                                    userEmail = emailInput.value;
+                                    responseSheet.email = userEmail;
+                                    console.log('Email captured from Email Octopus:', userEmail);
+                                    
+                                    // Send to Google Sheets after a short delay
+                                    setTimeout(() => {
+                                        sendResponseToServer();
+                                        addMessage("Thank you for joining the waitlist! 🎉", 'success');
+                                        addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
+                                    }, 1000);
+                                }
+                            });
+                        }
                     }
                 }
-            }, 100);
+            }, 200);
             
-            // Stop checking after 10 seconds
+            // Stop checking after 30 seconds
             setTimeout(() => {
                 clearInterval(checkForForm);
-            }, 10000);
+            }, 30000);
+        }
+        
+        // Prompt user for email if we can't capture it automatically
+        function promptForEmail() {
+            addMessage("Please enter the email you just used to sign up:", 'assistant');
+            currentState = 'captureEmail';
+            awaitingInput = true;
+            focusInput();
         }
 
         // Handle Enter key
