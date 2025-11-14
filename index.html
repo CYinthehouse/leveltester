@@ -145,6 +145,32 @@
             background: linear-gradient(45deg, #9b59b6, #8e44ad); 
             box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3); 
         }
+
+        /* Purple button with yellow glow for "How can I improve?" */
+        button.improve-button {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+            animation: yellowGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes yellowGlow {
+            0%, 100% {
+                box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3), 
+                            0 0 20px rgba(255, 215, 0, 0.4),
+                            0 0 30px rgba(255, 215, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3), 
+                            0 0 30px rgba(255, 215, 0, 0.6),
+                            0 0 40px rgba(255, 215, 0, 0.3);
+            }
+        }
+
+        button.improve-button:hover {
+            box-shadow: 0 10px 20px rgba(155, 89, 182, 0.4),
+                        0 0 35px rgba(255, 215, 0, 0.7),
+                        0 0 50px rgba(255, 215, 0, 0.4);
+        }
         
         button.class-button { 
             background: linear-gradient(45deg, #3498db, #2980b9); 
@@ -903,10 +929,10 @@
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
         }
 
-        /* Wrong buttons - RED */
+        /* Wrong buttons - LIGHTER RED */
         .audio-button.wrong {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+            background: linear-gradient(45deg, #ff6b6b, #e74c3c);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
         /* Correct buttons - GREEN */
@@ -937,7 +963,7 @@
         }
 
         .audio-button.wrong:hover {
-            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
         }
 
         .audio-button.correct:hover {
@@ -1023,10 +1049,10 @@
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
         }
 
-        /* Incorrect buttons - RED */
+        /* Incorrect buttons - LIGHTER RED */
         .quiz-button.incorrect {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+            background: linear-gradient(45deg, #ff6b6b, #e74c3c);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
         /* Correct button - GREEN */
@@ -1057,7 +1083,7 @@
         }
 
         .quiz-button.incorrect:hover {
-            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
         }
 
         .quiz-button.correct:hover {
@@ -1293,9 +1319,20 @@
                     <button class="quiz-button incorrect">d. 저는 집이었어요 ❌</button>
                 </div>
             </div>
+
+            <!-- Quiz Help Section - Only for BEGINNER -->
+            <div class="quiz-help-section" id="quizHelpSectionBeginner" style="display: none;">
+                <h3 class="quiz-help-header">How We Can Help You</h3>
+                <p class="quiz-question">Q. Which Korean sentence best expresses the meaning of "I want to go eat with my friends"?</p>
+                <div class="quiz-grid">
+                    <button class="quiz-button incorrect">a. 저는 식당에 갔어요 ❌</button>
+                    <button class="quiz-button incorrect">b. 저는 친구랑 갔어요 ❌</button>
+                    <button class="quiz-button correct">c. 저는 친구들이랑 밥 먹으러 가고 싶은데요 ✅</button>
+                </div>
+            </div>
             
             <div class="buttons">
-                <button class="primary" onclick="showStep('improvementPage')">How can I improve?</button>
+                <button class="improve-button" onclick="showStep('improvementPage')">How can I improve?</button>
             </div>
         </div>
 
@@ -1317,7 +1354,7 @@
             </div>
 
             <!-- Audio Help Section - For Improvement Page - REGULAR SIZE -->
-            <div class="audio-help-section" id="audioHelpSectionImprovement" style="display: none;">
+            <div class="audio-help-section" id="audioHelpSectionImprovement">
                 <h3 class="audio-help-header">How We Can Help You</h3>
                 <div class="audio-grid">
                     <button class="audio-button wrong" onclick="playAudio('wrongN')">Wrong <span class="korean-char">ㄴ</span></button>
@@ -1369,6 +1406,17 @@
                 <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Korean doesn't feel foreign anymore, but your sentences still come out short, choppy, and a little robotic. You rely on memorized simple sentences, and the moment you try to say anything more detailed, you get stuck.</p>
                 <p class="level-text">What does this REALLY mean? You're not a complete beginner anymore. Your issue isn't "not enough vocab." It's that your sentences are flat and 1-dimensional. You know the pieces, but no one has shown you how to connect them into natural, flowing Korean. That painful gap is exactly what we fix.</p>
                 <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> At KoreanLearnin, we identify where your sentences break (connectors, structure, or length) and give you targeted drills and feedback to strengthen them. You'll start with up to 4 weekly classes at 8:00 PM EST, including Sentence Building and Listening classes on Mondays and Fridays, so your Korean becomes connected, natural, and genuinely what YOU want to say.</p>
+            </div>
+
+            <!-- Quiz Help Section for BEGINNER - For Improvement Page -->
+            <div class="quiz-help-section" id="quizHelpSectionBeginnerImprovement">
+                <h3 class="quiz-help-header">How We Can Help You</h3>
+                <p class="quiz-question">Q. Which Korean sentence best expresses the meaning of "I want to go eat with my friends"?</p>
+                <div class="quiz-grid">
+                    <button class="quiz-button incorrect">a. 저는 식당에 갔어요 ❌</button>
+                    <button class="quiz-button incorrect">b. 저는 친구랑 갔어요 ❌</button>
+                    <button class="quiz-button correct">c. 저는 친구들이랑 밥 먹으러 가고 싶은데요 ✅</button>
+                </div>
             </div>
             
             <div class="arrow-separator">
@@ -1810,6 +1858,14 @@
             } else {
                 quizSection.style.display = 'none';
             }
+
+            // Show beginner quiz help section ONLY for BEGINNER
+            const quizSectionBeginner = document.getElementById('quizHelpSectionBeginner');
+            if (userLevel === 'BEGINNER') {
+                quizSectionBeginner.style.display = 'block';
+            } else {
+                quizSectionBeginner.style.display = 'none';
+            }
             
             // Show the results page
             showStep('resultsPage');
@@ -1836,21 +1892,15 @@
                     userSection.style.display = 'inline-block';
                 }
 
-                // Show/hide audio section on improvement page based on level
+                // Show ALL "How We Can Help You" sections on improvement page regardless of level
                 const audioSectionImprovement = document.getElementById('audioHelpSectionImprovement');
-                if (userLevel === 'ABSOLUTE BEGINNER') {
-                    audioSectionImprovement.style.display = 'block';
-                } else {
-                    audioSectionImprovement.style.display = 'none';
-                }
+                audioSectionImprovement.style.display = 'block';
 
-                // Show/hide quiz section on improvement page based on level
                 const quizSectionImprovement = document.getElementById('quizHelpSectionImprovement');
-                if (userLevel === 'NOVICE') {
-                    quizSectionImprovement.style.display = 'block';
-                } else {
-                    quizSectionImprovement.style.display = 'none';
-                }
+                quizSectionImprovement.style.display = 'block';
+
+                const quizSectionBeginnerImprovement = document.getElementById('quizHelpSectionBeginnerImprovement');
+                quizSectionBeginnerImprovement.style.display = 'block';
             }
         }
 
