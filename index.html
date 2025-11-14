@@ -1123,6 +1123,47 @@
             font-size: clamp(0.65rem, 2vw, 0.85rem);
             min-height: 50px;
         }
+
+        /* SMALLER sections for IMPROVEMENT PAGE (All Results Page) */
+        #improvementPage .audio-help-section,
+        #improvementPage .quiz-help-section {
+            max-width: 450px;
+        }
+
+        #improvementPage .audio-help-header,
+        #improvementPage .quiz-help-header {
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            margin-bottom: 1rem;
+        }
+
+        #improvementPage .quiz-question {
+            font-size: clamp(0.65rem, 2vw, 0.85rem);
+            margin-bottom: 1rem;
+        }
+
+        #improvementPage .audio-grid,
+        #improvementPage .quiz-grid {
+            gap: 0.8rem;
+            padding: 0 0.8rem;
+        }
+
+        #improvementPage .audio-button,
+        #improvementPage .quiz-button {
+            padding: clamp(10px, 2.5vw, 14px) clamp(16px, 3.5vw, 24px);
+            font-size: clamp(0.65rem, 2vw, 0.85rem);
+            min-height: 50px;
+        }
+
+        /* Subtitle under "How We Can Help You" headers */
+        .help-subtitle {
+            text-align: center;
+            font-size: clamp(0.4rem, 1.2vw, 0.55rem);
+            color: #ffd700;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+            font-weight: normal;
+        }
         
         @media (max-width: 768px) {
             .hero-image img {
@@ -1364,9 +1405,10 @@
                 <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> In our Tuesday Pronunciation Class at 8:00 PM EST, you'll get weekly customized evaluations, graphs to visualize your progress over time, and curated videos tailored to the exact pronunciation areas you score lowest in.</p>
             </div>
 
-            <!-- Audio Help Section - For Improvement Page - REGULAR SIZE -->
+            <!-- Audio Help Section - For Improvement Page -->
             <div class="audio-help-section" id="audioHelpSectionImprovement">
                 <h3 class="audio-help-header">How We Can Help You</h3>
+                <p class="help-subtitle">We'll correct your pronunciation.</p>
                 <div class="audio-grid">
                     <button class="audio-button wrong" onclick="playAudio('wrongN')">Wrong <span class="korean-char">ㄴ</span></button>
                     <button class="audio-button wrong" onclick="playAudio('wrongM')">Wrong <span class="korean-char">ㅁ</span></button>
@@ -1391,9 +1433,10 @@
                 <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> For 6 weeks, join our Tuesday and Wednesday classes at 8 PM EST (Vocabulary + Pronunciation) with targeted particle and ending drills, so you can build your own short sentences with the right grammar -- without freezing or relying on memorized scripts. Get ready to speak on the fly!</p>
             </div>
 
-            <!-- Quiz Help Section - For Improvement Page - REGULAR SIZE -->
-            <div class="quiz-help-section" id="quizHelpSectionImprovement" style="display: none;">
+            <!-- Quiz Help Section - For Improvement Page -->
+            <div class="quiz-help-section" id="quizHelpSectionImprovement">
                 <h3 class="quiz-help-header">How We Can Help You</h3>
+                <p class="help-subtitle">We'll help you master those tricky particles.</p>
                 <p class="quiz-question">Q. How do you say "I was at home" in Korean?</p>
                 <div class="quiz-grid">
                     <button class="quiz-button correct">a. 저는 집에 있었어요 ✅</button>
@@ -1422,6 +1465,7 @@
             <!-- Quiz Help Section for BEGINNER - For Improvement Page -->
             <div class="quiz-help-section" id="quizHelpSectionBeginnerImprovement">
                 <h3 class="quiz-help-header">How We Can Help You</h3>
+                <p class="help-subtitle">We'll help you express yourself.</p>
                 <p class="quiz-question">Q. Which Korean sentence best expresses the meaning of "I want to go eat with my friends"?</p>
                 <div class="quiz-grid">
                     <button class="quiz-button incorrect">a. 저는 식당에 갔어요 ❌</button>
@@ -1449,6 +1493,7 @@
             <!-- Quiz Help Section for ADVANCED BEGINNER - For Improvement Page -->
             <div class="quiz-help-section" id="quizHelpSectionAdvancedBeginnerImprovement">
                 <h3 class="quiz-help-header">How We Can Help You</h3>
+                <p class="help-subtitle">We'll help you make the most complex types of sentences.</p>
                 <p class="quiz-question">Q. Which Korean sentence best expresses the meaning of "The restaurant I like is too far, so I can't go often"?</p>
                 <div class="quiz-grid">
                     <button class="quiz-button incorrect">a. 그 식당을 좋아해요. 그리고 너무 멀어요. 못 가요. ❌</button>
@@ -1573,25 +1618,25 @@
                 failLevel: "ABSOLUTE BEGINNER"
             },
             {
-                question: "What does this mean in English?\n오늘 뭐 했어요?\n\nKeywords: (오늘, today) (뭐, what) (했어요, did)",
+                question: "What does this mean in English?\n오늘 뭐 했어요?",
                 type: "translation",
                 correctAnswers: ["what did you do today", "what did you do today?", "what have you done today"],
                 failLevel: "NOVICE"
             },
             {
-                question: "Provide the English Translation: \"제 엄마는 의사였어요\"\n\nKeywords: (제, my) (엄마, mom) (의사, doctor) (였어요, was)",
+                question: "Provide the English Translation: \"제 엄마는 의사였어요\"\n\nKeywords: (의사, doctor)",
                 type: "translation",
                 correctAnswers: ["my mom was a doctor", "my mother was a doctor", "my mom was doctor", "my mother was doctor"],
                 failLevel: "NOVICE"
             },
             {
-                question: "Provide the English Translation: \"제 아버지는 주차장에 있어요\"\n\nKeywords: (제, my) (아버지, father) (주차장, parking lot) (있어요, is at/in)",
+                question: "Provide the English Translation: \"제 아버지는 주차장에 있어요\"\n\nKeywords: (주차장, parking lot)",
                 type: "translation",
                 correctAnswers: ["my father is at the parking lot", "my dad is at the parking lot", "my father is in the parking lot", "my dad is in the parking lot", "my father is at a parking lot", "my dad is at a parking lot"],
                 failLevel: "NOVICE"
             },
             {
-                question: "Provide the English Translation: 제 동생은 집에 갔어요.\n\nKeywords: (제, my) (동생, younger sibling) (집, home) (갔어요, went)",
+                question: "Provide the English Translation: 제 동생은 집에 갔어요.\n\nKeywords: (동생, younger sibling)",
                 type: "translation",
                 correctAnswers: [
                     "my younger sibling went home", 
@@ -1609,7 +1654,7 @@
                 failLevel: "NOVICE"
             },
             {
-                question: "Provide the English Translation: \"제 엄마는 친구랑 만나고 아빠는 식당에 있어요\"\n\nKeywords: (제, my) (엄마, mom) (친구, friend) (랑, with) (만나고, meeting and) (아빠, dad) (식당, restaurant) (있어요, is at)",
+                question: "Provide the English Translation: \"제 엄마는 친구랑 만나고 아빠는 식당에 있어요\"\n\nKeywords: (식당, restaurant)",
                 type: "translation",
                 correctAnswers: [
                     "my mom is meeting with a friend and my dad is at a restaurant", 
@@ -1621,19 +1666,19 @@
                 failLevel: "BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"제 엄마하고 집에 갔어요\"\n\nKeywords: (제, my) (엄마, mom) (하고, with) (집, home) (갔어요, went)",
+                question: "Provide the English Translation: \"제 엄마하고 집에 갔어요\"",
                 type: "translation",
                 correctAnswers: ["i went home with my mom", "i went home with my mother"],
                 failLevel: "BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"제 아빠는 낚시하는 걸 좋아해요\"\n\nKeywords: (제, my) (아빠, dad) (낚시, fishing) (하는 걸, doing) (좋아해요, likes)",
+                question: "Provide the English Translation: \"제 아빠는 낚시하는 걸 좋아해요\"\n\nKeywords: (낚시, fishing)",
                 type: "translation",
                 correctAnswers: ["my dad likes fishing", "my father likes fishing", "my dad likes to fish", "my father likes to fish"],
                 failLevel: "BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"제 엄마는 집에 가는 거 같아요\"\n\nKeywords: (제, my) (엄마, mom) (집, home) (가는 거 같아요, seems to be going)",
+                question: "Provide the English Translation: \"제 엄마는 집에 가는 거 같아요\"",
                 type: "translation",
                 correctAnswers: [
                     "i think my mom is going home", 
@@ -1646,7 +1691,7 @@
                 failLevel: "BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"학교에서 밥 먹고 친구들하고 얘기하려고 해요\"\n\nKeywords: (학교, school) (에서, at) (밥, food/meal) (먹고, eat and) (친구들, friends) (하고, with) (얘기하려고 해요, trying to talk)",
+                question: "Provide the English Translation: \"학교에서 밥 먹고 친구들하고 얘기하려고 해요\"",
                 type: "translation",
                 correctAnswers: [
                     "i'm going to eat at school and talk with friends", 
@@ -1659,37 +1704,37 @@
                 failLevel: "BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"저는 내일 영화를 볼 거예요.\"\n\nKeywords: (저, I) (내일, tomorrow) (영화, movie) (볼 거예요, will watch)",
+                question: "Provide the English Translation: \"저는 내일 영화를 볼 거예요.\"",
                 type: "translation",
                 correctAnswers: ["i will watch a movie tomorrow", "i'm going to watch a movie tomorrow", "i will watch the movie tomorrow", "i'm going to watch the movie tomorrow", "i will watch movie tomorrow"],
                 failLevel: "ADVANCED BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"저는 나중에 공부할 거예요.\"\n\nKeywords: (저, I) (나중에, later) (공부할 거예요, will study)",
+                question: "Provide the English Translation: \"저는 나중에 공부할 거예요.\"",
                 type: "translation",
                 correctAnswers: ["i will study later", "i'm going to study later", "i'll study later"],
                 failLevel: "ADVANCED BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"저는 어제 친구를 만났어요.\"\n\nKeywords: (저, I) (어제, yesterday) (친구, friend) (만났어요, met)",
+                question: "Provide the English Translation: \"저는 어제 친구를 만났어요.\"",
                 type: "translation",
                 correctAnswers: ["i met a friend yesterday", "i met my friend yesterday", "i met friend yesterday"],
                 failLevel: "ADVANCED BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"먹을 데가 있나요?\"\n\nKeywords: (먹을, to eat) (데, place) (있나요, is there)",
+                question: "Provide the English Translation: \"먹을 데가 있나요?\"",
                 type: "translation",
                 correctAnswers: ["is there a place to eat", "is there somewhere to eat", "is there a place to eat at", "is there anywhere to eat"],
                 failLevel: "ADVANCED BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"먹을게 많아요\"\n\nKeywords: (먹을게, things to eat) (많아요, a lot/many)",
+                question: "Provide the English Translation: \"먹을게 많아요\"",
                 type: "translation",
                 correctAnswers: ["there is a lot to eat", "there are many things to eat", "there is much to eat", "there's a lot to eat", "there are a lot of things to eat"],
                 failLevel: "ADVANCED BEGINNER"
             },
             {
-                question: "What does this mean in English: \"제가 집에 갈 때, 친구를 만났어요.\"\n\nKeywords: (제가, I) (집, home) (갈 때, when going) (친구, friend) (만났어요, met)",
+                question: "What does this mean in English: \"제가 집에 갈 때, 친구를 만났어요.\"",
                 type: "translation",
                 correctAnswers: [
                     "when i was going home, i met a friend", 
@@ -1702,7 +1747,7 @@
                 failLevel: "ADVANCED BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"내일 비가 오면 집에 있을 거예요.\"\n\nKeywords: (내일, tomorrow) (비, rain) (오면, if it comes) (집, home) (있을 거예요, will be at)",
+                question: "Provide the English Translation: \"내일 비가 오면 집에 있을 거예요.\"",
                 type: "translation",
                 correctAnswers: [
                     "if it rains tomorrow, i will stay home", 
@@ -1715,7 +1760,7 @@
                 failLevel: "ADVANCED BEGINNER"
             },
             {
-                question: "Provide the English Translation: \"제가 올해 친구들이랑 한국에 갈 건데, 시간이 없어서 모르겠어요.\"\n\nKeywords: (제가, I) (올해, this year) (친구들, friends) (이랑, with) (한국, Korea) (갈 건데, going to go but) (시간, time) (없어서, don't have) (모르겠어요, don't know)",
+                question: "Provide the English Translation: \"제가 올해 친구들이랑 한국에 갈 건데, 시간이 없어서 모르겠어요.\"\n\nKeywords: (올해, this year)",
                 type: "translation",
                 correctAnswers: [
                     "i'm going to go to korea with friends this year, but i don't have time so i don't know", 
@@ -1727,7 +1772,7 @@
                 failLevel: "INTERMEDIATE"
             },
             {
-                question: "What does this mean in English: \"한 달 동안 한국에 있을 거예요\"\n\nKeywords: (한 달, one month) (동안, during/for) (한국, Korea) (있을 거예요, will be at)",
+                question: "What does this mean in English: \"한 달 동안 한국에 있을 거예요\"\n\nKeywords: (한 달, one month)",
                 type: "translation",
                 correctAnswers: [
                     "i will be in korea for a month", 
@@ -1738,7 +1783,7 @@
                 failLevel: "INTERMEDIATE"
             },
             {
-                question: "Provide the English Translation: \"한국에 가고 싶은데 요즘에 날씨가 너무 추워서 못 갈거 같아요.\"\n\nKeywords: (한국, Korea) (가고 싶은데, want to go but) (요즘에, these days) (날씨, weather) (너무, too) (추워서, cold so) (못 갈거 같아요, don't think can go)",
+                question: "Provide the English Translation: \"한국에 가고 싶은데 요즘에 날씨가 너무 추워서 못 갈거 같아요.\"\n\nKeywords: (요즘, these days) (날씨, weather)",
                 type: "translation",
                 correctAnswers: [
                     "i want to go to korea but the weather is too cold these days so i don't think i can go", 
@@ -1749,7 +1794,7 @@
                 failLevel: "INTERMEDIATE"
             },
             {
-                question: "Provide the English Translation: \"숙제를 해야 돼서 전화를 끊었어요\"\n\nKeywords: (숙제, homework) (해야 돼서, have to do so) (전화, phone) (끊었어요, hung up)",
+                question: "Provide the English Translation: \"숙제를 해야 돼서 전화를 끊었어요\"\n\nKeywords: (숙제, homework)",
                 type: "translation",
                 correctAnswers: [
                     "i hung up the phone because i had to do homework", 
@@ -1760,7 +1805,7 @@
                 failLevel: "INTERMEDIATE"
             },
             {
-                question: "Provide the English Translation: \"의사한테 검진을 받아야 되면 빨리 가야 돼요\"\n\nKeywords: (의사, doctor) (한테, to/from) (검진, checkup) (받아야 되면, if need to receive) (빨리, quickly) (가야 돼요, have to go)",
+                question: "Provide the English Translation: \"의사한테 검진을 받아야 되면 빨리 가야 돼요\"\n\nKeywords: (의사, doctor) (검진, checkup)",
                 type: "translation",
                 correctAnswers: [
                     "if you need to get a checkup from the doctor, you have to go quickly", 
