@@ -778,12 +778,39 @@
             text-align: center;
         }
 
+        /* Results Page Styling */
+        .level-name-header {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #ffd700;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+
+        .review-container {
+            margin-top: 2rem;
+        }
+
+        .review-header {
+            color: #ff6b6b;
+            text-align: center;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            margin-bottom: 1.5rem;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+        }
+
+        /* Black outline for all review section text */
+        .review-container * {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+
         .level-header {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             margin-bottom: 1.5rem;
-            flex-wrap: wrap;
             gap: 1rem;
         }
 
@@ -793,6 +820,39 @@
             text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
             margin: 0;
             text-align: center;
+        }
+
+        /* Color-coded headers for improvement page */
+        #section-absolute-beginner .level-header h2 {
+            color: #31afed;
+        }
+
+        #section-novice .level-header h2 {
+            color: #ffd700;
+        }
+
+        #section-beginner .level-header h2 {
+            color: #90EE90;
+        }
+
+        #section-advanced-beginner .level-header h2 {
+            color: #9b59b6;
+        }
+
+        #section-intermediate .level-header h2 {
+            color: #FF69B4;
+        }
+
+        /* Arrow separator between sections */
+        .arrow-separator {
+            text-align: center;
+            margin: 2rem auto;
+        }
+
+        .arrow-separator img {
+            width: clamp(40px, 8vw, 80px);
+            height: auto;
+            opacity: 0.7;
         }
         
         @media (max-width: 768px) {
@@ -942,17 +1002,18 @@
 
         <!-- Results Page - Shows level and mistakes -->
         <div id="resultsPage" class="step">
-            <h1 id="resultsTitle">Your Level: <span id="resultLevel"></span></h1>
-            
-            <!-- Mistakes Review Section -->
-            <div class="class-container" id="mistakesContainer" style="display: none;">
-                <h2 style="color: #ff6b6b; text-align: center; font-size: clamp(1rem, 2.5vw, 1.3rem); margin-bottom: 1.5rem;">Review Your Answers</h2>
-                <div id="mistakesList"></div>
-            </div>
+            <h1>Your Level</h1>
             
             <!-- Level Description -->
             <div class="class-container">
+                <h2 id="levelNameHeader" class="level-name-header"></h2>
                 <p class="description" id="levelDescription" style="text-align: left; line-height: 2;"></p>
+            </div>
+            
+            <!-- Mistakes Review Section - Moved to bottom -->
+            <div class="class-container review-container" id="mistakesContainer" style="display: none;">
+                <h2 class="review-header">Review Your Answers</h2>
+                <div id="mistakesList"></div>
             </div>
             
             <div class="buttons">
@@ -971,10 +1032,14 @@
                     <h2>ABSOLUTE BEGINNER</h2>
                     <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
                 </div>
-                <p class="level-text">What you're doing RIGHT: You're already taking the first real step -- looking at Korean letters and trying to read them. Your brain is waking up to a new sound system, and you're brave enough to actually say Korean out loud, even if it feels awkward.</p>
-                <p class="level-text">Your STRUGGLES: Right now, you're reading Korean with an "American mouth." Perhaps you can sound out words, but your lips, tongue, and rhythm are still English, so your Korean sounds foreign even when you're trying hard.</p>
+                <p class="level-text"><span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">What you're doing RIGHT:</span> You're already taking the first real step -- looking at Korean letters and trying to read them. Your brain is waking up to a new sound system, and you're brave enough to actually say Korean out loud, even if it feels awkward.</p>
+                <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Right now, you're reading Korean with an "American mouth." Perhaps you can sound out words, but your lips, tongue, and rhythm are still English, so your Korean sounds foreign even when you're trying hard.</p>
                 <p class="level-text">This doesn't mean you're "bad at Korean." It means no one has taught you how a Korean mouth moves. Most people don't even realize that matters! At this stage, you can't see WHAT you're struggling with without a visual or audio guide.</p>
-                <p class="level-text">The SOLUTION: In our Tuesday Pronunciation Class at 8:00 PM EST, you'll get weekly customized evaluations, graphs to visualize your progress over time, and curated videos tailored to the exact pronunciation areas you score lowest in.</p>
+                <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> In our Tuesday Pronunciation Class at 8:00 PM EST, you'll get weekly customized evaluations, graphs to visualize your progress over time, and curated videos tailored to the exact pronunciation areas you score lowest in.</p>
+            </div>
+            
+            <div class="arrow-separator">
+                <img src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/arroqw.png?v=1763079273" alt="Arrow">
             </div>
             
             <!-- Novice Section -->
@@ -983,10 +1048,14 @@
                     <h2>NOVICE</h2>
                     <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
                 </div>
-                <p class="level-text">What you're doing RIGHT: You can't hold a full conversation yet, but you can catch bits and pieces. You can slowly read, write, and put together basic sentences. You've pushed past the total beginner fog, and Korean isn't a total mystery anymore. NOW you want to take your learning seriously. Your pronunciation is improving, you know some basic phrases, but you still rely on memorized lines and perhaps your vocabulary might feel weak.</p>
-                <p class="level-text">Your STRUGGLES: Tiny but essential pieces (이에요/예요, 있어요, 이었어요/였어요, 에/에서/으로, 은/는 vs. 이/가, 을/를) keep tripping you up. You can read the words, but choosing the right one and building your own sentences still feels confusing. You see these everywhere, but no one has ever explained them in a way that finally clicks, so you're stuck thinking, "I can read… so why can't I actually say what I want?"</p>
+                <p class="level-text"><span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">What you're doing RIGHT:</span> You can't hold a full conversation yet, but you can catch bits and pieces. You can slowly read, write, and put together basic sentences. You've pushed past the total beginner fog, and Korean isn't a total mystery anymore. NOW you want to take your learning seriously. Your pronunciation is improving, you know some basic phrases, but you still rely on memorized lines and perhaps your vocabulary might feel weak.</p>
+                <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Tiny but essential pieces (이에요/예요, 있어요, 이었어요/였어요, 에/에서/으로, 은/는 vs. 이/가, 을/를) keep tripping you up. You can read the words, but choosing the right one and building your own sentences still feels confusing. You see these everywhere, but no one has ever explained them in a way that finally clicks, so you're stuck thinking, "I can read… so why can't I actually say what I want?"</p>
                 <p class="level-text">So what does this REALLY mean? It's not that you're not studying. You just haven't been taught these building blocks clearly. This is the level where we fix that!</p>
-                <p class="level-text">The SOLUTION: For 6 weeks, join our Tuesday and Wednesday classes at 8 PM EST (Vocabulary + Pronunciation) with targeted particle and ending drills, so you can build your own short sentences with the right grammar -- without freezing or relying on memorized scripts. Get ready to speak on the fly!</p>
+                <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> For 6 weeks, join our Tuesday and Wednesday classes at 8 PM EST (Vocabulary + Pronunciation) with targeted particle and ending drills, so you can build your own short sentences with the right grammar -- without freezing or relying on memorized scripts. Get ready to speak on the fly!</p>
+            </div>
+            
+            <div class="arrow-separator">
+                <img src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/arroqw.png?v=1763079273" alt="Arrow">
             </div>
             
             <!-- Beginner Section -->
@@ -995,10 +1064,14 @@
                     <h2>BEGINNER</h2>
                     <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
                 </div>
-                <p class="level-text">What you're doing RIGHT: You've got the basics down. Present tense feels comfortable, you know plenty of vocabulary, and you can introduce yourself, talk about hobbies, and make short, simple sentences.</p>
-                <p class="level-text">Your STRUGGLES: Korean doesn't feel foreign anymore, but your sentences still come out short, choppy, and a little robotic. You rely on memorized simple sentences, and the moment you try to say anything more detailed, you get stuck.</p>
+                <p class="level-text"><span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">What you're doing RIGHT:</span> You've got the basics down. Present tense feels comfortable, you know plenty of vocabulary, and you can introduce yourself, talk about hobbies, and make short, simple sentences.</p>
+                <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Korean doesn't feel foreign anymore, but your sentences still come out short, choppy, and a little robotic. You rely on memorized simple sentences, and the moment you try to say anything more detailed, you get stuck.</p>
                 <p class="level-text">What does this REALLY mean? You're not a complete beginner anymore. Your issue isn't "not enough vocab." It's that your sentences are flat and 1-dimensional. You know the pieces, but no one has shown you how to connect them into natural, flowing Korean. That painful gap is exactly what we fix.</p>
-                <p class="level-text">The SOLUTION: At KoreanLearnin, we identify where your sentences break (connectors, structure, or length) and give you targeted drills and feedback to strengthen them. You'll start with up to 4 weekly classes at 8:00 PM EST, including Sentence Building and Listening classes on Mondays and Fridays, so your Korean becomes connected, natural, and genuinely what YOU want to say.</p>
+                <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> At KoreanLearnin, we identify where your sentences break (connectors, structure, or length) and give you targeted drills and feedback to strengthen them. You'll start with up to 4 weekly classes at 8:00 PM EST, including Sentence Building and Listening classes on Mondays and Fridays, so your Korean becomes connected, natural, and genuinely what YOU want to say.</p>
+            </div>
+            
+            <div class="arrow-separator">
+                <img src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/arroqw.png?v=1763079273" alt="Arrow">
             </div>
             
             <!-- Advanced Beginner Section -->
@@ -1007,10 +1080,14 @@
                     <h2>ADVANCED BEGINNER</h2>
                     <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
                 </div>
-                <p class="level-text">What you're doing RIGHT: You know a lot of grammar, have strong vocabulary, and can write long, correct sentences when you have time.</p>
-                <p class="level-text">Your STRUGGLES: But in real conversations, your brain works too hard. You build the sentence in English first, translate to Korean, feel the delay, and sometimes freeze. Your knowledge is stuck in the "thinking" stage instead of the "speaking" stage... and you're probably exhausted by vague advice like "just speak more."</p>
+                <p class="level-text"><span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">What you're doing RIGHT:</span> You know a lot of grammar, have strong vocabulary, and can write long, correct sentences when you have time.</p>
+                <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> But in real conversations, your brain works too hard. You build the sentence in English first, translate to Korean, feel the delay, and sometimes freeze. Your knowledge is stuck in the "thinking" stage instead of the "speaking" stage... and you're probably exhausted by vague advice like "just speak more."</p>
                 <p class="level-text">What does this REALLY mean? You don't need more writing practice. You need to train your brain to speak FULLY on the fly! You should look at a prompt once, turn away from the screen, and say it in Korean from memory. This strengthens the basal ganglia (your "automatic speech" system), so Korean starts coming out naturally, not only when you can write it first.</p>
-                <p class="level-text">The SOLUTION: Join our rigorous Thursday speaking classes at 8 PM EST. We'll train spontaneous conversation, use grammar software to target your weak spots, and teach you "Konglish bridge" techniques that stop you from translating in your head before speaking.</p>
+                <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> Join our rigorous Thursday speaking classes at 8 PM EST. We'll train spontaneous conversation, use grammar software to target your weak spots, and teach you "Konglish bridge" techniques that stop you from translating in your head before speaking.</p>
+            </div>
+            
+            <div class="arrow-separator">
+                <img src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/arroqw.png?v=1763079273" alt="Arrow">
             </div>
             
             <!-- Intermediate Section -->
@@ -1330,9 +1407,18 @@
             }
             
             // Populate level
-            document.getElementById('resultLevel').textContent = userLevel;
+            document.getElementById('levelNameHeader').textContent = userLevel;
+            
             const description = levelDescriptions[userLevel] || "Congratulations on completing the test!";
-            document.getElementById('levelDescription').innerHTML = description.replace(/\n\n/g, '<br><br>');
+            
+            // Apply color coding to the description
+            let coloredDescription = description
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/(What you're doing RIGHT:)/g, '<span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">$1</span>')
+                .replace(/(Your STRUGGLES:)/g, '<span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">$1</span>')
+                .replace(/(The SOLUTION:)/g, '<span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">$1</span>');
+            
+            document.getElementById('levelDescription').innerHTML = coloredDescription;
             
             // Get incorrect answers
             const incorrectAnswers = responseSheet.responses.filter(r => !r.isCorrect);
@@ -1480,6 +1566,15 @@
             
             addMessage("⏰ Time's up!", 'error');
             
+            // Show what the correct answer was
+            setTimeout(() => {
+                if (question.type === 'yesno') {
+                    addMessage(`The correct answer was: Yes`, 'assistant');
+                } else {
+                    addMessage(`Correct answer: "${question.correctAnswers[0]}"`, 'success');
+                }
+            }, 500);
+            
             // Track if first question wrong
             if (currentQuestionIndex === 0) {
                 gotFirstQuestionWrong = true;
@@ -1499,7 +1594,7 @@
             if (shouldStopTest()) {
                 setTimeout(() => {
                     determineLevel();
-                }, 1500);
+                }, 2000);
             } else {
                 // Continue to next question
                 setTimeout(() => {
@@ -1509,7 +1604,7 @@
                     } else {
                         completeTest();
                     }
-                }, 1500);
+                }, 2000);
             }
         }
 
@@ -1946,8 +2041,6 @@
                             }
                         }, 1000);
                     } else {
-                        addMessage("❌ Incorrect.", 'error');
-                        
                         // Track if first question wrong
                         if (currentQuestionIndex === 0) {
                             gotFirstQuestionWrong = true;
@@ -1963,11 +2056,28 @@
                             mistakesByLevel[level]++;
                         }
                         
+                        // Show different messages based on mistake count
+                        if (totalMistakes === 1) {
+                            addMessage("❌ Incorrect. One more try remaining!", 'error');
+                        } else {
+                            addMessage("❌ Incorrect. Determining level...", 'error');
+                        }
+                        
+                        // Show what they got wrong and the correct answer
+                        setTimeout(() => {
+                            if (question.type === 'yesno') {
+                                addMessage(`The correct answer was: Yes`, 'assistant');
+                            } else {
+                                addMessage(`Your answer: "${answer}"`, 'assistant');
+                                addMessage(`Correct answer: "${question.correctAnswers[0]}"`, 'success');
+                            }
+                        }, 500);
+                        
                         // Check if should stop test based on grading rules
                         if (shouldStopTest()) {
                             setTimeout(() => {
                                 determineLevel();
-                            }, 1500);
+                            }, 2000);
                         } else {
                             // Continue to next question
                             setTimeout(() => {
@@ -1977,7 +2087,7 @@
                                 } else {
                                     completeTest();
                                 }
-                            }, 1500);
+                            }, 2000);
                         }
                     }
                     break;
