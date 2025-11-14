@@ -778,6 +778,11 @@
             text-align: center;
         }
 
+        /* Disclaimer page formatting */
+        #disclaimerPage .class-container p {
+            margin-bottom: 1.5rem;
+        }
+
         /* Results Page Styling */
         .level-name-header {
             font-size: clamp(1.2rem, 3vw, 1.8rem);
@@ -850,9 +855,69 @@
         }
 
         .arrow-separator img {
-            width: clamp(40px, 8vw, 80px);
+            width: clamp(20px, 4vw, 40px);
             height: auto;
             opacity: 0.7;
+        }
+
+        /* Audio clips section */
+        .audio-help-section {
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+
+        .audio-help-header {
+            text-align: center;
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            color: #31afed;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .audio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+
+        .audio-button {
+            padding: clamp(12px, 3vw, 18px) clamp(20px, 4vw, 30px);
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Press Start 2P', cursive;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .audio-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.5);
+        }
+
+        .audio-button:active {
+            transform: translateY(0);
+        }
+
+        .audio-button.playing {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            animation: pulse-audio 0.5s ease-in-out;
+        }
+
+        @keyframes pulse-audio {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.95); }
         }
         
         @media (max-width: 768px) {
@@ -963,7 +1028,15 @@
         <div id="disclaimerPage" class="step">
             <h1>⚠️ Warning!</h1>
             <div class="class-container">
-                <p class="description">Welcome to the Level Test! You're allowed 2 incorrect answers before your level is scored. You have 25 seconds per question. Try your best and good luck!</p>
+                <p class="description" style="text-align: center;">
+                    <span style="color: #ffd700; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold; font-size: clamp(0.9rem, 3.2vw, 1.3rem);">Welcome to the Level Test!</span>
+                </p>
+                <p class="description" style="text-align: center;">
+                    You're allowed 2 incorrect answers before your level is scored. You have 25 seconds per question.
+                </p>
+                <p class="description" style="text-align: center;">
+                    <span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Try your best and good luck! 🍀</span>
+                </p>
             </div>
             
             <div class="buttons">
@@ -1010,10 +1083,21 @@
                 <p class="description" id="levelDescription" style="text-align: left; line-height: 2;"></p>
             </div>
             
-            <!-- Mistakes Review Section - Moved to bottom -->
+            <!-- Mistakes Review Section -->
             <div class="class-container review-container" id="mistakesContainer" style="display: none;">
                 <h2 class="review-header">Review Your Answers</h2>
                 <div id="mistakesList"></div>
+            </div>
+
+            <!-- Audio Help Section - Only for ABSOLUTE BEGINNER -->
+            <div class="audio-help-section" id="audioHelpSection" style="display: none;">
+                <h3 class="audio-help-header">How We Can Help You</h3>
+                <div class="audio-grid">
+                    <button class="audio-button" onclick="playAudio('wrongN')">Wrong ㄴ</button>
+                    <button class="audio-button" onclick="playAudio('wrongM')">Wrong ㅁ</button>
+                    <button class="audio-button" onclick="playAudio('correctN')">Correct ㄴ</button>
+                    <button class="audio-button" onclick="playAudio('correctM')">Correct ㅁ</button>
+                </div>
             </div>
             
             <div class="buttons">
@@ -1036,6 +1120,17 @@
                 <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Right now, you're reading Korean with an "American mouth." Perhaps you can sound out words, but your lips, tongue, and rhythm are still English, so your Korean sounds foreign even when you're trying hard.</p>
                 <p class="level-text">This doesn't mean you're "bad at Korean." It means no one has taught you how a Korean mouth moves. Most people don't even realize that matters! At this stage, you can't see WHAT you're struggling with without a visual or audio guide.</p>
                 <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> In our Tuesday Pronunciation Class at 8:00 PM EST, you'll get weekly customized evaluations, graphs to visualize your progress over time, and curated videos tailored to the exact pronunciation areas you score lowest in.</p>
+            </div>
+
+            <!-- Audio Help Section - For Improvement Page -->
+            <div class="audio-help-section" id="audioHelpSectionImprovement" style="display: none;">
+                <h3 class="audio-help-header">How We Can Help You</h3>
+                <div class="audio-grid">
+                    <button class="audio-button" onclick="playAudio('wrongN')">Wrong ㄴ</button>
+                    <button class="audio-button" onclick="playAudio('wrongM')">Wrong ㅁ</button>
+                    <button class="audio-button" onclick="playAudio('correctN')">Correct ㄴ</button>
+                    <button class="audio-button" onclick="playAudio('correctM')">Correct ㅁ</button>
+                </div>
             </div>
             
             <div class="arrow-separator">
@@ -1100,11 +1195,25 @@
             </div>
             
             <div class="buttons">
+                <button class="secondary" onclick="showResultsPage()">← Back to My Results</button>
                 <button class="primary" onclick="window.location.reload()">Take Another Test</button>
             </div>
         </div>
     </div>
 
+    <!-- Audio elements for pronunciation examples -->
+    <audio id="audio-wrongN" preload="auto">
+        <source src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/wrong_n.mp3?v=1763085677" type="audio/mpeg">
+    </audio>
+    <audio id="audio-wrongM" preload="auto">
+        <source src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/wrong_m.mp3?v=1763085684" type="audio/mpeg">
+    </audio>
+    <audio id="audio-correctN" preload="auto">
+        <source src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/correct_nd.mp3?v=1763085657" type="audio/mpeg">
+    </audio>
+    <audio id="audio-correctM" preload="auto">
+        <source src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/correct_mb.mp3?v=1763085668" type="audio/mpeg">
+    </audio>
 
     <script>
         // SERVER CONFIGURATION - Update this with your endpoint
@@ -1398,6 +1507,39 @@
             "INTERMEDIATE": "Placeholder for now"
         };
 
+        // Audio playback function
+        function playAudio(audioType) {
+            // Stop all audio first
+            const allAudio = ['wrongN', 'wrongM', 'correctN', 'correctM'];
+            allAudio.forEach(type => {
+                const audio = document.getElementById(`audio-${type}`);
+                if (audio) {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }
+                // Remove playing class from all buttons
+                document.querySelectorAll('.audio-button').forEach(btn => {
+                    btn.classList.remove('playing');
+                });
+            });
+
+            // Play the selected audio
+            const audio = document.getElementById(`audio-${audioType}`);
+            if (audio) {
+                // Add playing class to the clicked button
+                event.target.classList.add('playing');
+                
+                audio.play().catch(error => {
+                    console.error('Error playing audio:', error);
+                });
+
+                // Remove playing class when audio ends
+                audio.onended = function() {
+                    event.target.classList.remove('playing');
+                };
+            }
+        }
+
         // Show results page with mistakes and level description
         function showResultsPage() {
             // Check if level has been determined
@@ -1446,6 +1588,14 @@
                 // No mistakes - hide the mistakes container
                 document.getElementById('mistakesContainer').style.display = 'none';
             }
+
+            // Show audio help section ONLY for ABSOLUTE BEGINNER
+            const audioSection = document.getElementById('audioHelpSection');
+            if (userLevel === 'ABSOLUTE BEGINNER') {
+                audioSection.style.display = 'block';
+            } else {
+                audioSection.style.display = 'none';
+            }
             
             // Show the results page
             showStep('resultsPage');
@@ -1470,6 +1620,14 @@
                 const userSection = document.querySelector(`#section-${sectionId} .you-are-here`);
                 if (userSection) {
                     userSection.style.display = 'inline-block';
+                }
+
+                // Show/hide audio section on improvement page based on level
+                const audioSectionImprovement = document.getElementById('audioHelpSectionImprovement');
+                if (userLevel === 'ABSOLUTE BEGINNER') {
+                    audioSectionImprovement.style.display = 'block';
+                } else {
+                    audioSectionImprovement.style.display = 'none';
                 }
             }
         }
