@@ -2287,20 +2287,31 @@
                 setTimeout(() => {
                     explainMistake();
                     setTimeout(() => {
-                        // Show message with link to trigger Email Octopus form
-                        addMessage("Click the button below to join the waitlist for Korean classes at your level!", 'assistant');
+                        // Directly trigger Email Octopus popup
+                        addMessage("Opening waitlist form...", 'assistant');
                         
-                        // Add Email Octopus trigger button to chat
-                        const messagesDiv = document.getElementById('chatMessages');
-                        const buttonDiv = document.createElement('div');
-                        buttonDiv.className = 'chat-message assistant';
-                        buttonDiv.style.textAlign = 'center';
-                        buttonDiv.innerHTML = '<a href="#" class="eo-form-trigger" data-form="f4d7ea20-c115-11f0-832b-93a8e7fa134f" style="display: inline-block; padding: 1rem 2rem; background: linear-gradient(45deg, #2ecc71, #27ae60); color: white; text-decoration: none; border-radius: 50px; font-family: \'Press Start 2P\', cursive; font-size: clamp(0.7rem, 2vw, 0.9rem); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); transition: all 0.3s ease;">Join Waitlist 🎉</a>';
-                        messagesDiv.appendChild(buttonDiv);
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                        
-                        // Set up monitoring for Email Octopus form
                         setTimeout(() => {
+                            // Check if Email Octopus is loaded and trigger popup
+                            if (window.EO && window.EO.openForm) {
+                                window.EO.openForm('f4d7ea20-c115-11f0-832b-93a8e7fa134f');
+                            } else if (window.emailoctopus) {
+                                window.emailoctopus.openForm('f4d7ea20-c115-11f0-832b-93a8e7fa134f');
+                            } else {
+                                // Fallback: create trigger and click it programmatically
+                                const trigger = document.createElement('a');
+                                trigger.href = '#';
+                                trigger.className = 'eo-form-trigger';
+                                trigger.setAttribute('data-form', 'f4d7ea20-c115-11f0-832b-93a8e7fa134f');
+                                trigger.style.display = 'none';
+                                document.body.appendChild(trigger);
+                                
+                                // Wait a moment then click it
+                                setTimeout(() => {
+                                    trigger.click();
+                                }, 100);
+                            }
+                            
+                            // Start monitoring for form
                             monitorEmailOctopusForm();
                         }, 500);
                         
@@ -2340,20 +2351,31 @@
             setTimeout(() => {
                 addMessage("Congrats! You've passed all questions with flying colors!", 'success');
                 setTimeout(() => {
-                    // Show message with link to trigger Email Octopus form
-                    addMessage("Click the button below to join the waitlist for Korean classes at your level!", 'assistant');
+                    // Directly trigger Email Octopus popup
+                    addMessage("Opening waitlist form...", 'assistant');
                     
-                    // Add Email Octopus trigger button to chat
-                    const messagesDiv = document.getElementById('chatMessages');
-                    const buttonDiv = document.createElement('div');
-                    buttonDiv.className = 'chat-message assistant';
-                    buttonDiv.style.textAlign = 'center';
-                    buttonDiv.innerHTML = '<a href="#" class="eo-form-trigger" data-form="f4d7ea20-c115-11f0-832b-93a8e7fa134f" style="display: inline-block; padding: 1rem 2rem; background: linear-gradient(45deg, #2ecc71, #27ae60); color: white; text-decoration: none; border-radius: 50px; font-family: \'Press Start 2P\', cursive; font-size: clamp(0.7rem, 2vw, 0.9rem); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); transition: all 0.3s ease;">Join Waitlist 🎉</a>';
-                    messagesDiv.appendChild(buttonDiv);
-                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                    
-                    // Set up monitoring for Email Octopus form
                     setTimeout(() => {
+                        // Check if Email Octopus is loaded and trigger popup
+                        if (window.EO && window.EO.openForm) {
+                            window.EO.openForm('f4d7ea20-c115-11f0-832b-93a8e7fa134f');
+                        } else if (window.emailoctopus) {
+                            window.emailoctopus.openForm('f4d7ea20-c115-11f0-832b-93a8e7fa134f');
+                        } else {
+                            // Fallback: create trigger and click it programmatically
+                            const trigger = document.createElement('a');
+                            trigger.href = '#';
+                            trigger.className = 'eo-form-trigger';
+                            trigger.setAttribute('data-form', 'f4d7ea20-c115-11f0-832b-93a8e7fa134f');
+                            trigger.style.display = 'none';
+                            document.body.appendChild(trigger);
+                            
+                            // Wait a moment then click it
+                            setTimeout(() => {
+                                trigger.click();
+                            }, 100);
+                        }
+                        
+                        // Start monitoring for form
                         monitorEmailOctopusForm();
                     }, 500);
                     
