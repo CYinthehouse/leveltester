@@ -1181,6 +1181,28 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6) !important;
         }
+
+        /* Style Email Octopus popup close button - circular and red */
+        .eo-modal-close,
+        .eo-form-close,
+        [class*="close"][class*="eo"],
+        .eo-modal .close,
+        .eo-modal button[aria-label="Close"] {
+            background: #e74c3c !important;
+            border-radius: 50% !important;
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .eo-modal-close:hover,
+        .eo-form-close:hover {
+            background: #c0392b !important;
+        }
         
         @media (max-width: 768px) {
             .hero-image img {
@@ -2431,6 +2453,24 @@
                 return;
             }
             
+            // Validate we have required data
+            if (!userName) {
+                console.error('❌ Cannot send to server: userName is missing');
+                addMessage("Error: Name not found. Please refresh and try again.", 'error');
+                return;
+            }
+            
+            if (!userLevel) {
+                console.error('❌ Cannot send to server: userLevel is missing');
+                addMessage("Error: Level not determined. Please complete the test first.", 'error');
+                return;
+            }
+            
+            if (!userEmail) {
+                console.error('❌ Cannot send to server: userEmail is missing');
+                return;
+            }
+            
             try {
                 console.log('Sending response sheet to server...');
                 console.log('Endpoint:', SERVER_CONFIG.endpoint);
@@ -2444,6 +2484,10 @@
                 responseSheet.incorrectAnswers = responseSheet.totalQuestions - responseSheet.correctAnswers;
                 
                 console.log('Data to send:', responseSheet);
+                console.log('  - Name:', userName);
+                console.log('  - Email:', userEmail);
+                console.log('  - Level:', userLevel);
+                console.log('  - Total responses:', responseSheet.responses.length);
                 
                 // Create a unique callback name
                 const callbackName = 'jsonpCallback_' + Date.now();
@@ -2672,72 +2716,20 @@
 
         // Monitor Email Octopus form for submission
         function monitorEmailOctopusForm() {
-            // Find the Email Octopus form - it may appear after clicking the trigger
-            const checkForForm = setInterval(() => {
-                const eoForm = document.querySelector('.eo-form') || 
-                               document.querySelector('[class*="emailoctopus"]') || 
-                               document.querySelector('form[action*="emailoctopus"]') ||
-                               document.querySelector('iframe[src*="emailoctopus"]');
-                
-                if (eoForm) {
-                    console.log('Found Email Octopus form element');
-                    
-                    // If it's an iframe, we need to handle it differently
-                    if (eoForm.tagName === 'IFRAME') {
-                        console.log('Email Octopus is using iframe');
-                        // Try to detect when iframe form is submitted by monitoring URL or postMessage
-                        window.addEventListener('message', function(event) {
-                            // Email Octopus may send success message via postMessage
-                            if (event.data && (event.data.type === 'emailoctopus-success' || event.data.success)) {
-                                console.log('Email Octopus form submitted via iframe');
-                                // Prompt user for email since we can't access iframe content
-                                setTimeout(() => {
-                                    promptForEmail();
-                                }, 500);
-                            }
-                        });
-                    } else {
-                        // It's a regular form element
-                        clearInterval(checkForForm);
-                        
-                        // Find the email input field
-                        const emailInput = eoForm.querySelector('input[type="email"]') || 
-                                         eoForm.querySelector('input[name="emailAddress"]') ||
-                                         eoForm.querySelector('input[name="email"]');
-                        
-                        if (emailInput) {
-                            console.log('Found email input in Email Octopus form');
-                            
-                            // Monitor form submission
-                            eoForm.addEventListener('submit', function(e) {
-                                // Capture the email value
-                                if (emailInput && emailInput.value) {
-                                    userEmail = emailInput.value;
-                                    responseSheet.email = userEmail;
-                                    console.log('Email captured from Email Octopus:', userEmail);
-                                    
-                                    // Send to Google Sheets after a short delay
-                                    setTimeout(() => {
-                                        sendResponseToServer();
-                                        addMessage("Thank you for joining the waitlist! 🎉", 'success');
-                                        addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
-                                    }, 1000);
-                                }
-                            });
-                        }
-                    }
-                }
-            }, 200);
+            // Since Email Octopus often uses iframes, we can't reliably capture the email
+            // Instead, we'll ask the user to confirm their email after they submit
             
-            // Stop checking after 30 seconds
+            addMessage("After you submit the waitlist form, please enter your email here so we can save your results.", 'assistant');
+            
+            // Wait a bit then prompt for email
             setTimeout(() => {
-                clearInterval(checkForForm);
-            }, 30000);
+                promptForEmail();
+            }, 3000);
         }
         
-        // Prompt user for email if we can't capture it automatically
+        // Prompt user for email
         function promptForEmail() {
-            addMessage("Please enter the email you just used to sign up:", 'assistant');
+            addMessage("Please enter the email you used for the waitlist:", 'assistant');
             currentState = 'captureEmail';
             awaitingInput = true;
             focusInput();
