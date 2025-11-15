@@ -145,32 +145,6 @@
             background: linear-gradient(45deg, #9b59b6, #8e44ad); 
             box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3); 
         }
-
-        /* Purple button with yellow glow for "How can I improve?" */
-        button.improve-button {
-            background: linear-gradient(45deg, #9b59b6, #8e44ad);
-            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
-            animation: yellowGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes yellowGlow {
-            0%, 100% {
-                box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3), 
-                            0 0 20px rgba(255, 215, 0, 0.4),
-                            0 0 30px rgba(255, 215, 0, 0.2);
-            }
-            50% {
-                box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3), 
-                            0 0 30px rgba(255, 215, 0, 0.6),
-                            0 0 40px rgba(255, 215, 0, 0.3);
-            }
-        }
-
-        button.improve-button:hover {
-            box-shadow: 0 10px 20px rgba(155, 89, 182, 0.4),
-                        0 0 35px rgba(255, 215, 0, 0.7),
-                        0 0 50px rgba(255, 215, 0, 0.4);
-        }
         
         button.class-button { 
             background: linear-gradient(45deg, #3498db, #2980b9); 
@@ -391,8 +365,8 @@
 
         /* Chat Interface Styles */
         .chat-container {
-            max-width: 800px;
-            width: 100%;
+            width: 800px;
+            max-width: 100%;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.3);
@@ -400,12 +374,14 @@
             padding: 2rem;
             backdrop-filter: blur(5px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
 
         .chat-messages {
             min-height: 400px;
             max-height: 500px;
             overflow-y: auto;
+            overflow-x: hidden;
             margin-bottom: 2rem;
             padding: 1rem;
             background: rgba(0, 0, 0, 0.2);
@@ -418,6 +394,8 @@
             border-radius: 10px;
             animation: messageSlideIn 0.5s ease-out;
             line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         @keyframes messageSlideIn {
@@ -536,176 +514,6 @@
             cursor: not-allowed;
         }
 
-        @media (max-width: 768px) {
-            .chat-container {
-                padding: 1rem;
-            }
-
-            .chat-messages {
-                min-height: 300px;
-                max-height: 400px;
-            }
-
-            .chat-message.user {
-                margin-left: 1rem;
-            }
-
-            .chat-input-container {
-                flex-direction: column;
-            }
-
-            .chat-submit {
-                width: 100%;
-            }
-
-            .chat-button-group {
-                margin-top: 0.5rem;
-            }
-
-            .chat-button {
-                width: 100%;
-            }
-        }
-
-        /* Blackboard Widget Styles */
-        .blackboard-widget {
-            max-width: 1035px;
-            margin: 30px auto;
-            padding: 20px 30px;
-            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
-            border: 15px solid #8B4513;
-            border-radius: 10px;
-            box-shadow: 
-                inset 0 0 20px rgba(0,0,0,0.8),
-                0 5px 15px rgba(0,0,0,0.5);
-            font-family: 'Press Start 2P', cursive;
-            min-height: 150px;
-        }
-
-        .bb-header {
-            color: #fff;
-            text-shadow: 1px 1px 3px rgba(255,255,255,0.3);
-            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-            font-weight: bold;
-            text-align: center;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .bb-underline {
-            height: 2px;
-            background: linear-gradient(90deg, 
-                transparent 0%, 
-                rgba(255,255,255,0.6) 20%, 
-                rgba(255,255,255,0.8) 50%, 
-                rgba(255,255,255,0.6) 80%, 
-                transparent 100%);
-            margin: 10px auto 15px;
-            width: 80%;
-        }
-
-        .class-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px 15px;
-        }
-
-        .class-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 8px;
-            gap: 12px;
-        }
-
-        .class-name {
-            color: #87CEEB;
-            font-size: clamp(0.5rem, 1.5vw, 0.7rem);
-            text-shadow: 1px 1px 3px rgba(135,206,235,0.4);
-            line-height: 1.3;
-            flex-shrink: 0;
-        }
-
-        .seats-info {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .seats-count {
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
-            font-weight: bold;
-        }
-
-        .seats-label {
-            color: #ffd700;
-            font-size: clamp(0.45rem, 1.2vw, 0.6rem);
-            text-transform: uppercase;
-        }
-
-        /* Green for 4+ seats */
-        .seats-high { 
-            color: #00ff00;
-            text-shadow: 0 0 20px rgba(0,255,0,0.5);
-        }
-        
-        /* Yellow blinking for 2-3 seats */
-        .seats-medium { 
-            color: #ffff00;
-            text-shadow: 0 0 20px rgba(255,255,0,0.5);
-            animation: blink 1.2s ease-in-out infinite;
-        }
-        
-        /* Red FAST blinking for 1 seat */
-        .seats-urgent { 
-            color: #ff4444;
-            text-shadow: 0 0 30px rgba(255,68,68,0.8);
-            animation: urgent-blink 0.5s ease-in-out infinite;
-        }
-        
-        /* Solid red for sold out */
-        .seats-out { 
-            color: #ff4444;
-            text-shadow: 0 0 30px rgba(255,68,68,0.8);
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        @keyframes urgent-blink {
-            0%, 100% { 
-                opacity: 1; 
-                transform: scale(1.1);
-                text-shadow: 0 0 40px rgba(255,68,68,1);
-            }
-            50% { 
-                opacity: 0.2;
-                transform: scale(1);
-                text-shadow: 0 0 20px rgba(255,68,68,0.5);
-            }
-        }
-
-        .loading {
-            color: #fff;
-            text-align: center;
-            padding: 30px;
-            font-size: clamp(0.6rem, 1.8vw, 0.85rem);
-        }
-
-        .status-text {
-            font-size: clamp(0.4rem, 1.1vw, 0.55rem);
-            color: rgba(255,255,255,0.5);
-            margin-left: 5px;
-            font-style: normal;
-        }
-
         /* Results Page Styles */
         .mistake-item {
             background: rgba(255, 255, 255, 0.05);
@@ -736,79 +544,6 @@
             color: #90EE90;
         }
 
-        /* Improvement Page Styles */
-        .level-section {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem auto;
-            max-width: 900px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .level-section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .you-are-here {
-            font-size: clamp(0.7rem, 2vw, 1rem);
-            color: #ff4444;
-            font-weight: bold;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-            animation: pulse-glow 1.5s ease-in-out infinite;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 68, 68, 0.2);
-            border-radius: 20px;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.7;
-                transform: scale(1.05);
-            }
-        }
-
-        .level-text {
-            font-size: clamp(0.4rem, 1.2vw, 0.6rem);
-            line-height: 2;
-            color: white;
-            text-align: left;
-            opacity: 0.95;
-            margin-bottom: 1rem;
-        }
-
-        #resultsTitle {
-            font-size: clamp(1.3rem, 5vw, 2.5rem);
-            text-align: center;
-        }
-
-        #resultLevel {
-            color: #ffd700;
-        }
-
-        #levelDescription {
-            white-space: pre-line;
-            font-size: clamp(0.5rem, 1.5vw, 0.7rem);
-            line-height: 2;
-        }
-
-        .class-container h2 {
-            text-align: center;
-        }
-
-        /* Disclaimer page formatting */
-        #disclaimerPage .class-container p {
-            margin-bottom: 1.5rem;
-        }
-
         /* Results Page Styling */
         .level-name-header {
             font-size: clamp(1.2rem, 3vw, 1.8rem);
@@ -834,56 +569,6 @@
         /* Black outline for all review section text */
         .review-container * {
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-        }
-
-        .level-header {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            gap: 1rem;
-        }
-
-        .level-header h2 {
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            color: #31afed;
-            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
-            margin: 0;
-            text-align: center;
-        }
-
-        /* Color-coded headers for improvement page */
-        #section-absolute-beginner .level-header h2 {
-            color: #31afed;
-        }
-
-        #section-novice .level-header h2 {
-            color: #ffd700;
-        }
-
-        #section-beginner .level-header h2 {
-            color: #90EE90;
-        }
-
-        #section-advanced-beginner .level-header h2 {
-            color: #9b59b6;
-        }
-
-        #section-intermediate .level-header h2 {
-            color: #FF69B4;
-        }
-
-        /* Arrow separator between sections */
-        .arrow-separator {
-            text-align: center;
-            margin: 2rem auto;
-        }
-
-        .arrow-separator img {
-            width: clamp(20px, 4vw, 40px);
-            height: auto;
-            opacity: 0.7;
         }
 
         /* Audio clips section - BASE STYLES */
@@ -1124,48 +809,7 @@
             min-height: 50px;
         }
 
-        /* SMALLER sections for IMPROVEMENT PAGE (All Results Page) */
-        #improvementPage .audio-help-section,
-        #improvementPage .quiz-help-section {
-            max-width: 450px;
-        }
-
-        #improvementPage .audio-help-header,
-        #improvementPage .quiz-help-header {
-            font-size: clamp(0.7rem, 2vw, 0.9rem);
-            margin-bottom: 1rem;
-        }
-
-        #improvementPage .quiz-question {
-            font-size: clamp(0.65rem, 2vw, 0.85rem);
-            margin-bottom: 1rem;
-        }
-
-        #improvementPage .audio-grid,
-        #improvementPage .quiz-grid {
-            gap: 0.8rem;
-            padding: 0 0.8rem;
-        }
-
-        #improvementPage .audio-button,
-        #improvementPage .quiz-button {
-            padding: clamp(10px, 2.5vw, 14px) clamp(16px, 3.5vw, 24px);
-            font-size: clamp(0.65rem, 2vw, 0.85rem);
-            min-height: 50px;
-        }
-
         /* Subtitle under "How We Can Help You" headers */
-        .help-subtitle {
-            text-align: center;
-            font-size: clamp(0.4rem, 1.2vw, 0.55rem);
-            color: #ffd700;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-            margin-top: -0.5rem;
-            margin-bottom: 1rem;
-            font-weight: normal;
-        }
-
-        /* Larger subtitle for results pages (2 font sizes larger) */
         .help-subtitle-results {
             text-align: center;
             font-size: clamp(0.6rem, 1.6vw, 0.75rem);
@@ -1176,39 +820,6 @@
             font-weight: normal;
         }
 
-        /* Email Octopus trigger button hover */
-        .eo-form-trigger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6) !important;
-        }
-
-        /* Make Email Octopus close button circular and red */
-        button[class*="close"],
-        a[class*="close"],
-        div[class*="close"],
-        .eo-popup-close,
-        [aria-label="Close"],
-        [title="Close"] {
-            background: #e74c3c !important;
-            border-radius: 50% !important;
-            width: 40px !important;
-            height: 40px !important;
-            min-width: 40px !important;
-            min-height: 40px !important;
-            max-width: 40px !important;
-            max-height: 40px !important;
-            padding: 0 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            border: none !important;
-        }
-
-        button[class*="close"]:hover,
-        a[class*="close"]:hover,
-        div[class*="close"]:hover {
-            background: #c0392b !important;
-        }
         
         @media (max-width: 768px) {
             .hero-image img {
@@ -1232,51 +843,34 @@
             .pricing-card ul li {
                 font-size: 0.7rem;
             }
-            
-            #tutoringPricingPage .pricing-container {
-                grid-template-columns: 1fr !important;
+
+            .chat-container {
+                padding: 1rem;
             }
 
-            .blackboard-widget {
-                max-width: 95%;
-                padding: 15px 20px;
-                margin: 20px auto;
-                min-height: 120px;
+            .chat-messages {
+                min-height: 300px;
+                max-height: 400px;
             }
 
-            .class-list {
-                grid-template-columns: 1fr;
-                gap: 8px;
+            .chat-message.user {
+                margin-left: 1rem;
             }
 
-            .bb-header {
-                font-size: clamp(0.7rem, 2vw, 0.9rem);
-            }
-
-            .class-name {
-                font-size: clamp(0.45rem, 1.3vw, 0.6rem);
-            }
-
-            .seats-count {
-                font-size: clamp(1rem, 3vw, 1.4rem);
-            }
-
-            .seats-label {
-                font-size: clamp(0.4rem, 1vw, 0.5rem);
-            }
-
-            .status-text {
-                font-size: clamp(0.4rem, 1vw, 0.5rem);
-            }
-
-            .level-section {
-                padding: 1.5rem;
-                margin: 1.5rem auto;
-            }
-
-            .level-header {
+            .chat-input-container {
                 flex-direction: column;
-                align-items: center;
+            }
+
+            .chat-submit {
+                width: 100%;
+            }
+
+            .chat-button-group {
+                margin-top: 0.5rem;
+            }
+
+            .chat-button {
+                width: 100%;
             }
 
             .audio-grid {
@@ -1286,10 +880,6 @@
         
         @media (min-width: 769px) and (max-width: 1200px) {
             .pricing-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .class-list {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -1432,140 +1022,12 @@
                 </div>
             </div>
             
-            <div class="buttons">
-                <button class="improve-button" onclick="showStep('improvementPage')">How can I improve?</button>
-            </div>
-        </div>
-
-        <!-- Improvement Roadmap Page - Shows all levels -->
-        <div id="improvementPage" class="step">
-            <h1>📚 Your Learning Path</h1>
-            <p class="description">See where you are and where you're heading!</p>
-            
-            <!-- Absolute Beginner Section -->
-            <div class="level-section" id="section-absolute-beginner">
-                <div class="level-header">
-                    <h2>ABSOLUTE BEGINNER</h2>
-                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
-                </div>
-                <p class="level-text"><span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">What you're doing RIGHT:</span> You're already taking the first real step -- looking at Korean letters and trying to read them. Your brain is waking up to a new sound system, and you're brave enough to actually say Korean out loud, even if it feels awkward.</p>
-                <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Right now, you're reading Korean with an "American mouth." Perhaps you can sound out words, but your lips, tongue, and rhythm are still English, so your Korean sounds foreign even when you're trying hard.</p>
-                <p class="level-text">This doesn't mean you're "bad at Korean." It means no one has taught you how a Korean mouth moves. Most people don't even realize that matters! At this stage, you can't see WHAT you're struggling with without a visual or audio guide.</p>
-                <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> In our Tuesday Pronunciation Class at 8:00 PM EST, you'll get weekly customized evaluations, graphs to visualize your progress over time, and curated videos tailored to the exact pronunciation areas you score lowest in.</p>
-            </div>
-
-            <!-- Audio Help Section - For Improvement Page -->
-            <div class="audio-help-section" id="audioHelpSectionImprovement">
-                <h3 class="audio-help-header">How We Can Help You</h3>
-                <p class="help-subtitle">We'll correct your pronunciation.</p>
-                <div class="audio-grid">
-                    <button class="audio-button wrong" onclick="playAudio('wrongN')">Wrong <span class="korean-char">ㄴ</span></button>
-                    <button class="audio-button wrong" onclick="playAudio('wrongM')">Wrong <span class="korean-char">ㅁ</span></button>
-                    <button class="audio-button correct" onclick="playAudio('correctN')">Correct <span class="korean-char">ㄴ</span></button>
-                    <button class="audio-button correct" onclick="playAudio('correctM')">Correct <span class="korean-char">ㅁ</span></button>
-                </div>
-            </div>
-            
-            <div class="arrow-separator">
-                <img src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/arroqw.png?v=1763079273" alt="Arrow">
-            </div>
-            
-            <!-- Novice Section -->
-            <div class="level-section" id="section-novice">
-                <div class="level-header">
-                    <h2>NOVICE</h2>
-                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
-                </div>
-                <p class="level-text"><span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">What you're doing RIGHT:</span> You can't hold a full conversation yet, but you can catch bits and pieces. You can slowly read, write, and put together basic sentences. You've pushed past the total beginner fog, and Korean isn't a total mystery anymore. NOW you want to take your learning seriously. Your pronunciation is improving, you know some basic phrases, but you still rely on memorized lines and perhaps your vocabulary might feel weak.</p>
-                <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Tiny but essential pieces (이에요/예요, 있어요, 이었어요/였어요, 에/에서/으로, 은/는 vs. 이/가, 을/를) keep tripping you up. You can read the words, but choosing the right one and building your own sentences still feels confusing. You see these everywhere, but no one has ever explained them in a way that finally clicks, so you're stuck thinking, "I can read… so why can't I actually say what I want?"</p>
-                <p class="level-text">So what does this REALLY mean? It's not that you're not studying. You just haven't been taught these building blocks clearly. This is the level where we fix that!</p>
-                <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> For 6 weeks, join our Tuesday and Wednesday classes at 8 PM EST (Vocabulary + Pronunciation) with targeted particle and ending drills, so you can build your own short sentences with the right grammar -- without freezing or relying on memorized scripts. Get ready to speak on the fly!</p>
-            </div>
-
-            <!-- Quiz Help Section - For Improvement Page -->
-            <div class="quiz-help-section" id="quizHelpSectionImprovement">
-                <h3 class="quiz-help-header">How We Can Help You</h3>
-                <p class="help-subtitle">We'll help you master those tricky particles.</p>
-                <p class="quiz-question">Q. How do you say "I was at home" in Korean?</p>
-                <div class="quiz-grid">
-                    <button class="quiz-button correct">a. 저는 집에 있었어요 ✅</button>
-                    <button class="quiz-button incorrect">b. 저는 집이에요 ❌</button>
-                    <button class="quiz-button incorrect">c. 저는 집에 있어요 ❌</button>
-                    <button class="quiz-button incorrect">d. 저는 집이었어요 ❌</button>
-                </div>
-            </div>
-            
-            <div class="arrow-separator">
-                <img src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/arroqw.png?v=1763079273" alt="Arrow">
-            </div>
-            
-            <!-- Beginner Section -->
-            <div class="level-section" id="section-beginner">
-                <div class="level-header">
-                    <h2>BEGINNER</h2>
-                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
-                </div>
-                <p class="level-text"><span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">What you're doing RIGHT:</span> You've got the basics down. Present tense feels comfortable, you know plenty of vocabulary, and you can introduce yourself, talk about hobbies, and make short, simple sentences.</p>
-                <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> Korean doesn't feel foreign anymore, but your sentences still come out short, choppy, and a little robotic. You rely on memorized simple sentences, and the moment you try to say anything more detailed, you get stuck.</p>
-                <p class="level-text">What does this REALLY mean? You're not a complete beginner anymore. Your issue isn't "not enough vocab." It's that your sentences are flat and 1-dimensional. You know the pieces, but no one has shown you how to connect them into natural, flowing Korean. That painful gap is exactly what we fix.</p>
-                <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> At KoreanLearnin, we identify where your sentences break (connectors, structure, or length) and give you targeted drills and feedback to strengthen them. You'll start with up to 4 weekly classes at 8:00 PM EST, including Sentence Building and Listening classes on Mondays and Fridays, so your Korean becomes connected, natural, and genuinely what YOU want to say.</p>
-            </div>
-
-            <!-- Quiz Help Section for BEGINNER - For Improvement Page -->
-            <div class="quiz-help-section" id="quizHelpSectionBeginnerImprovement">
-                <h3 class="quiz-help-header">How We Can Help You</h3>
-                <p class="help-subtitle">We'll help you express yourself.</p>
-                <p class="quiz-question">Q. Which Korean sentence best expresses the meaning of "I want to go eat with my friends"?</p>
-                <div class="quiz-grid">
-                    <button class="quiz-button incorrect">a. 저는 식당에 갔어요 ❌</button>
-                    <button class="quiz-button incorrect">b. 저는 친구랑 갔어요 ❌</button>
-                    <button class="quiz-button correct">c. 저는 친구들이랑 밥 먹으러 가고 싶은데요 ✅</button>
-                </div>
-            </div>
-            
-            <div class="arrow-separator">
-                <img src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/arroqw.png?v=1763079273" alt="Arrow">
-            </div>
-            
-            <!-- Advanced Beginner Section -->
-            <div class="level-section" id="section-advanced-beginner">
-                <div class="level-header">
-                    <h2>ADVANCED BEGINNER</h2>
-                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
-                </div>
-                <p class="level-text"><span style="color: #90EE90; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">What you're doing RIGHT:</span> You know a lot of grammar, have strong vocabulary, and can write long, correct sentences when you have time.</p>
-                <p class="level-text"><span style="color: #FFA500; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">Your STRUGGLES:</span> But in real conversations, your brain works too hard. You build the sentence in English first, translate to Korean, feel the delay, and sometimes freeze. Your knowledge is stuck in the "thinking" stage instead of the "speaking" stage... and you're probably exhausted by vague advice like "just speak more."</p>
-                <p class="level-text">What does this REALLY mean? You don't need more writing practice. You need to train your brain to speak FULLY on the fly! You should look at a prompt once, turn away from the screen, and say it in Korean from memory. This strengthens the basal ganglia (your "automatic speech" system), so Korean starts coming out naturally, not only when you can write it first.</p>
-                <p class="level-text"><span style="color: #FF69B4; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; font-weight: bold;">The SOLUTION:</span> Join our rigorous Thursday speaking classes at 8 PM EST. We'll train spontaneous conversation, use grammar software to target your weak spots, and teach you "Konglish bridge" techniques that stop you from translating in your head before speaking.</p>
-            </div>
-
-            <!-- Quiz Help Section for ADVANCED BEGINNER - For Improvement Page -->
-            <div class="quiz-help-section" id="quizHelpSectionAdvancedBeginnerImprovement">
-                <h3 class="quiz-help-header">How We Can Help You</h3>
-                <p class="help-subtitle">We'll help you make the most complex types of sentences.</p>
-                <p class="quiz-question">Q. Which Korean sentence best expresses the meaning of "The restaurant I like is too far, so I can't go often"?</p>
-                <div class="quiz-grid">
-                    <button class="quiz-button incorrect">a. 그 식당을 좋아해요. 그리고 너무 멀어요. 못 가요. ❌</button>
-                    <button class="quiz-button incorrect">b. 저는 그 식당 좋아요. 그리고 멀어서 못 가요. ❌</button>
-                    <button class="quiz-button correct">c. 제가 좋아하는 식당이 너무 멀어서 자주 못 가요. ✅</button>
-                </div>
-            </div>
-            
-            <div class="arrow-separator">
-                <img src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/arroqw.png?v=1763079273" alt="Arrow">
-            </div>
-            
-            <!-- Intermediate Section -->
-            <div class="level-section" id="section-intermediate">
-                <div class="level-header">
-                    <h2>INTERMEDIATE</h2>
-                    <span class="you-are-here" style="display: none;">YOU ARE HERE</span>
-                </div>
-                <p class="level-text">Placeholder for now</p>
+            <!-- Email Octopus Inline Form -->
+            <div style="max-width: 600px; margin: 2rem auto; padding: 0 1rem;">
+                <script async src="https://eocampaign1.com/form/8d2378aa-c1b4-11f0-9758-e11413f393b4.js" data-form="8d2378aa-c1b4-11f0-9758-e11413f393b4"></script>
             </div>
             
             <div class="buttons">
-                <button class="secondary" onclick="showResultsPage()">← Back to My Results</button>
                 <button class="primary" onclick="window.location.reload()">Take Another Test</button>
             </div>
         </div>
@@ -1584,9 +1046,6 @@
     <audio id="audio-correctM" preload="auto">
         <source src="https://cdn.shopify.com/s/files/1/0674/6747/7282/files/correct_mb.mp3?v=1763085668" type="audio/mpeg">
     </audio>
-
-    <!-- Email Octopus Waitlist Form -->
-    <script async src="https://eocampaign1.com/form/f4d7ea20-c115-11f0-832b-93a8e7fa134f.js" data-form="f4d7ea20-c115-11f0-832b-93a8e7fa134f"></script>
 
     <script>
         // SERVER CONFIGURATION - Update this with your endpoint
@@ -1648,7 +1107,6 @@
         let testEndTime = null;
         let responseSheet = {
             userName: '',
-            email: '',
             level: '',
             testDate: new Date().toISOString(),
             responses: [],
@@ -1997,42 +1455,6 @@
             
             // Show the results page
             showStep('resultsPage');
-            
-            // Mark the user's level on improvement page
-            const levelMapping = {
-                "ABSOLUTE BEGINNER": "absolute-beginner",
-                "NOVICE": "novice",
-                "BEGINNER": "beginner",
-                "ADVANCED BEGINNER": "advanced-beginner",
-                "INTERMEDIATE": "intermediate"
-            };
-            
-            const sectionId = levelMapping[userLevel];
-            if (sectionId) {
-                // Hide all "YOU ARE HERE" markers first
-                document.querySelectorAll('.you-are-here').forEach(marker => {
-                    marker.style.display = 'none';
-                });
-                
-                // Show the marker for user's level
-                const userSection = document.querySelector(`#section-${sectionId} .you-are-here`);
-                if (userSection) {
-                    userSection.style.display = 'inline-block';
-                }
-
-                // Show ALL "How We Can Help You" sections on improvement page regardless of level
-                const audioSectionImprovement = document.getElementById('audioHelpSectionImprovement');
-                audioSectionImprovement.style.display = 'block';
-
-                const quizSectionImprovement = document.getElementById('quizHelpSectionImprovement');
-                quizSectionImprovement.style.display = 'block';
-
-                const quizSectionBeginnerImprovement = document.getElementById('quizHelpSectionBeginnerImprovement');
-                quizSectionBeginnerImprovement.style.display = 'block';
-
-                const quizSectionAdvancedBeginnerImprovement = document.getElementById('quizHelpSectionAdvancedBeginnerImprovement');
-                quizSectionAdvancedBeginnerImprovement.style.display = 'block';
-            }
         }
 
         // Start level test from disclaimer
@@ -2314,41 +1736,9 @@
                 setTimeout(() => {
                     explainMistake();
                     setTimeout(() => {
-                        // Send to Google Sheets immediately (without email)
+                        // Send to Google Sheets immediately
                         sendResponseToServer();
-                        
-                        // Then open Email Octopus popup for waitlist
-                        addMessage("Opening waitlist form...", 'assistant');
-                        
-                        setTimeout(() => {
-                            // Wait for Email Octopus script to be fully loaded
-                            const waitForEO = setInterval(() => {
-                                // Check if Email Octopus is loaded by looking for its elements
-                                const eoScript = document.querySelector('script[src*="eocampaign1.com"]');
-                                if (eoScript) {
-                                    clearInterval(waitForEO);
-                                    
-                                    // Create Email Octopus trigger link with correct attribute
-                                    const trigger = document.createElement('a');
-                                    trigger.href = '#';
-                                    trigger.setAttribute('data-eo-form-toggle-id', 'f4d7ea20-c115-11f0-832b-93a8e7fa134f');
-                                    trigger.textContent = 'Join Waitlist';
-                                    trigger.style.display = 'none';
-                                    document.body.appendChild(trigger);
-                                    
-                                    // Click it to open the popup
-                                    setTimeout(() => {
-                                        trigger.click();
-                                        console.log('Email Octopus popup triggered');
-                                    }, 500);
-                                }
-                            }, 100);
-                            
-                            // Timeout after 5 seconds
-                            setTimeout(() => clearInterval(waitForEO), 5000);
-                        }, 1000);
-                        
-                        addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
+                        addMessage("Your results have been saved! Click 'I'm done with the test' to see your detailed results.", 'assistant');
                         awaitingInput = false;
                     }, 2000);
                 }, 1000);
@@ -2385,98 +1775,12 @@
             setTimeout(() => {
                 addMessage("Congrats! You've passed all questions with flying colors!", 'success');
                 setTimeout(() => {
-                    // Send to Google Sheets immediately (without email)
+                    // Send to Google Sheets immediately
                     sendResponseToServer();
-                    
-                    // Then open Email Octopus popup for waitlist
-                    addMessage("Opening waitlist form...", 'assistant');
-                    
-                    setTimeout(() => {
-                        // Wait for Email Octopus script to be fully loaded
-                        const waitForEO = setInterval(() => {
-                            // Check if Email Octopus is loaded by looking for its elements
-                            const eoScript = document.querySelector('script[src*="eocampaign1.com"]');
-                            if (eoScript) {
-                                clearInterval(waitForEO);
-                                
-                                // Create Email Octopus trigger link with correct attribute
-                                const trigger = document.createElement('a');
-                                trigger.href = '#';
-                                trigger.setAttribute('data-eo-form-toggle-id', 'f4d7ea20-c115-11f0-832b-93a8e7fa134f');
-                                trigger.textContent = 'Join Waitlist';
-                                trigger.style.display = 'none';
-                                document.body.appendChild(trigger);
-                                
-                                // Click it to open the popup
-                                setTimeout(() => {
-                                    trigger.click();
-                                    console.log('Email Octopus popup triggered');
-                                }, 500);
-                            }
-                        }, 100);
-                        
-                        // Timeout after 5 seconds
-                        setTimeout(() => clearInterval(waitForEO), 5000);
-                    }, 1000);
-                    
-                    addMessage("Click 'I'm done with the test' to see your detailed results.", 'assistant');
+                    addMessage("Your results have been saved! Click 'I'm done with the test' to see your detailed results.", 'assistant');
                     awaitingInput = false;
                 }, 1500);
             }, 1000);
-        }
-
-        // Test connection to Google Apps Script
-        function testConnection() {
-            console.log('🧪 Testing connection to Google Apps Script...');
-            
-            const testCallback = 'testCallback_' + Date.now();
-            window[testCallback] = function(response) {
-                console.log('✅ CONNECTION TEST SUCCESSFUL!');
-                console.log('Response:', response);
-                delete window[testCallback];
-                const script = document.querySelector(`script[data-testcallback="${testCallback}"]`);
-                if (script && document.body.contains(script)) {
-                    document.body.removeChild(script);
-                }
-            };
-            
-            const testData = {
-                userName: 'Test User',
-                level: 'TEST',
-                totalQuestions: 1,
-                correctAnswers: 1,
-                incorrectAnswers: 0,
-                responses: [{
-                    questionNumber: 1,
-                    question: 'Test',
-                    userAnswer: 'Test',
-                    correctAnswer: 'Test',
-                    isCorrect: true
-                }]
-            };
-            
-            const script = document.createElement('script');
-            script.setAttribute('data-testcallback', testCallback);
-            const testUrl = `${SERVER_CONFIG.endpoint}?callback=${testCallback}&data=${encodeURIComponent(JSON.stringify(testData))}`;
-            console.log('Test URL:', testUrl);
-            script.src = testUrl;
-            
-            script.onerror = function(e) {
-                console.error('❌ CONNECTION TEST FAILED');
-                console.error('Error event:', e);
-                console.error('Possible causes:');
-                console.error('- Browser extension blocking the request');
-                console.error('- Ad blocker interfering');
-                console.error('- CSP (Content Security Policy) blocking');
-                console.error('- Network issue');
-                delete window[testCallback];
-            };
-            
-            script.onload = function() {
-                console.log('✅ Script tag loaded');
-            };
-            
-            document.body.appendChild(script);
         }
 
         // Send response sheet to server using JSONP to match Google Apps Script doGet
@@ -2503,9 +1807,8 @@
                 console.log('Sending response sheet to server...');
                 console.log('Endpoint:', SERVER_CONFIG.endpoint);
                 
-                // Prepare response sheet data (NO EMAIL)
+                // Prepare response sheet data
                 responseSheet.userName = userName;
-                responseSheet.email = 'N/A'; // Email collected separately by Email Octopus
                 responseSheet.level = userLevel;
                 responseSheet.totalQuestions = responseSheet.responses.length;
                 responseSheet.correctAnswers = responseSheet.responses.filter(r => r.isCorrect).length;
@@ -2565,7 +1868,6 @@
                     console.error('2. The Google Apps Script is not responding');
                     console.error('3. Network/firewall issue');
                     console.log('');
-                    console.log('🧪 Try running: testConnection()');
                     console.log('Response sheet saved locally:', responseSheet);
                     
                     // Cleanup
@@ -2600,8 +1902,6 @@
                 console.log('Response sheet saved locally. Data:', responseSheet);
             }
         }
-
-        // Ask if they want to continue
 
         // Ask next question
         function askNextQuestion() {
@@ -2749,7 +2049,7 @@
             }, 300);
         });
 
-        // Page Navigation (keep existing function)
+        // Page Navigation
         function showStep(stepId) {
             const allSteps = document.querySelectorAll('.step');
             const currentActive = document.querySelector('.step.active');
